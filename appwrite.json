@@ -1,0 +1,21 @@
+{
+    "projectId": "647dc841ab72fff2362b",
+    "projectName": "TaskWallet",
+    "functions": [
+        {
+            "$id": "647dd504c2f5b4c8f0d4",
+            "name": "test",
+            "runtime": "node-16.0",
+            "path": "functions/test",
+            "entrypoint": "src/index.js",
+            "ignore": [
+                "node_modules",
+                ".npm"
+            ],
+            "execute": [],
+            "events": [],
+            "schedule": "",
+            "timeout": 15
+        }
+    ]
+}
