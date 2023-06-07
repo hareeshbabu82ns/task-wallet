@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 const ButtonPrimary: React.FC<{
   text: string;
   className?: HTMLAttributes<HTMLButtonElement>["className"];
+  onClick?: React.MouseEventHandler<HTMLButtonElement>;
 }> = (props) => {
   return (
     <motion.button
@@ -11,6 +12,7 @@ const ButtonPrimary: React.FC<{
       type="submit"
       whileHover={{ scale: 1.03 }}
       whileTap={{ scale: 0.97 }}
+      onClick={props.onClick}
     >
       {props.text}
     </motion.button>

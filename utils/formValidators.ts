@@ -11,3 +11,9 @@ export const passwordValidator = (val: string) => {
 export const nameValidator = (val: string) => {
   return val.length >= 3;
 };
+
+export const charactersValidator = (min: number, max: number) => {
+  return (val: string) => {
+    return min <= val.length && val.length <= max;
+  };
+};

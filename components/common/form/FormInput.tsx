@@ -52,11 +52,11 @@ const FormInput: React.FC<Props> = (props) => {
       </div>
       <div className="form-input relative">
         <input
-          className={`w-full min-w-[18rem] rounded-lg px-3 py-1.5 shadow-shadow-form-input bg-transparent outline-0 outline-offset-2 focus:!outline-blue-700 ${
+          className={`input2 w-full min-w-[18rem] rounded-lg px-3 py-1.5 shadow-shadow-form-input !bg-transparent autofill:shadow-shadow-form-autofill autofill:!text-red-200 outline-0 outline-offset-2 focus:!outline-blue-700 ${
             hasError
               ? "outline !outline-1 outline-red-500"
               : !error
-              ? "outline !outline-1 outline-secondary"
+              ? "outline !outline-1 outline-green-600"
               : ""
           }`}
           onFocus={onFocus}
@@ -66,6 +66,9 @@ const FormInput: React.FC<Props> = (props) => {
           onChange={(e) => onChange(e.currentTarget.value)}
           value={value || ""}
           hidden={false}
+          style={{
+            WebkitTextFillColor: "#f8f9fa",
+          }}
         />
         {type === "password" && (
           <faIcons.FaRegEye

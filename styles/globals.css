@@ -25,3 +25,9 @@ body {
     )
     rgb(var(--background-start-rgb));
 } */
+
+.input2::autofill,
+.input2::-webkit-autofill {
+  background-color: red !important;
+  -webkit-text-fill-color: aqua !important;
+}
