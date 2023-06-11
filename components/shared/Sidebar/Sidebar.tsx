@@ -4,7 +4,7 @@ import Conmbobox from "../../common/combobox/Combobox";
 
 const Sidebar = () => {
   return (
-    <aside className="w-[18%] h-full border-r-border-primary border-r py-3">
+    <aside className="w-[18%] min-h-full border-r-border-primary border-r py-3">
       <Conmbobox />
       <Routes />
     </aside>

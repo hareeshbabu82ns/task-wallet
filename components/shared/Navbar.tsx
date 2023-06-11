@@ -5,6 +5,7 @@ import {
 import Link from "next/link";
 import React from "react";
 import { IoIosLogOut } from "react-icons/io";
+import Conmbobox from "../common/combobox/Combobox";
 
 const Navbar = () => {
   const authStore = useAuthStore((s) => s);
@@ -17,7 +18,9 @@ const Navbar = () => {
           <span>Wallet</span>
         </h2>
       </Link>
-      <ul className="ml-auto flex gap-5">
+
+      {loggedIn && <Conmbobox />}
+      <ul className={`flex gap-5 ${loggedIn ? "" : "ml-auto"}`}>
         {!loggedIn && (
           <>
             <li>
@@ -30,7 +33,10 @@ const Navbar = () => {
         )}
         {loggedIn && (
           <li>
-            <button onClick={() => logoutUser(authStore)}>
+            <button
+              className="flex items-center"
+              onClick={() => logoutUser(authStore)}
+            >
               <IoIosLogOut className="w-6 h-6" />
             </button>
           </li>

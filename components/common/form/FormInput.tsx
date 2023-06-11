@@ -11,7 +11,9 @@ type Props = {
   errorMessage: string;
   onFocus: () => void;
   error: boolean;
+  isTouched: boolean;
   labelColor?: string;
+  min?: number;
 };
 
 const FormInput: React.FC<Props> = (props) => {
@@ -26,6 +28,8 @@ const FormInput: React.FC<Props> = (props) => {
     onFocus,
     labelColor,
     error,
+    min,
+    isTouched,
   } = props;
 
   const labelModifier = labelColor ? labelColor : "currentColor";
@@ -36,7 +40,7 @@ const FormInput: React.FC<Props> = (props) => {
   };
 
   return (
-    <div className="z-0 flex flex-col gap-2">
+    <div className="z-0 flex flex-col gap-2 w-full">
       <div className={`flex items-center`}>
         <label
           className="text-grey-light"
@@ -52,11 +56,11 @@ const FormInput: React.FC<Props> = (props) => {
       </div>
       <div className="form-input relative">
         <input
-          className={`input2 w-full min-w-[18rem] rounded-lg px-3 py-1.5 shadow-shadow-form-input !bg-transparent autofill:shadow-shadow-form-autofill autofill:!text-red-200 outline-0 outline-offset-2 focus:!outline-blue-700 ${
+          className={`input2 w-full rounded-lg px-3 py-1.5 shadow-shadow-form-input !bg-transparent autofill:shadow-shadow-form-autofill autofill:!text-red-200 outline-0 outline-offset-2 focus:outline-blue-700 ${
             hasError
               ? "outline !outline-1 outline-red-500"
-              : !error
-              ? "outline !outline-1 outline-green-600"
+              : !error && isTouched
+              ? "outline !outline-1 !outline-green-600"
               : ""
           }`}
           onFocus={onFocus}
@@ -66,6 +70,7 @@ const FormInput: React.FC<Props> = (props) => {
           onChange={(e) => onChange(e.currentTarget.value)}
           value={value || ""}
           hidden={false}
+          min={min}
           style={{
             WebkitTextFillColor: "#f8f9fa",
           }}

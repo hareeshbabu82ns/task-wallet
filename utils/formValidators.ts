@@ -17,3 +17,9 @@ export const charactersValidator = (min: number, max: number) => {
     return min <= val.length && val.length <= max;
   };
 };
+
+export const numberValidator = (min: number, max: number) => {
+  return (val: string) => {
+    return min <= Number(val) && Number(val) <= max;
+  };
+};

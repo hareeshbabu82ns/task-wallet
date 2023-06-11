@@ -14,6 +14,7 @@ export default function Conmbobox() {
   const [query, setQuery] = useState("");
 
   const [newRealmModal, setNewRealmModal] = useState(false);
+  const [realmsIsLoading, setRealmsIsLoading] = useState(false);
 
   const realmStore = useRealmStore((s) => s);
 
@@ -39,10 +40,15 @@ export default function Conmbobox() {
 
   useEffect(() => {
     if (realms && realms?.length > 0 && !selected) {
-      setSelected(realms[0]);
       realmStore.setCurrentRealm(realms[0]);
     }
   }, [realms, selected]);
+
+  useEffect(() => {
+    if (currentRealm) {
+      setSelected(currentRealm);
+    }
+  }, [currentRealm]);
 
   const filteredRealms =
     query === ""
@@ -55,8 +61,8 @@ export default function Conmbobox() {
         );
 
   useEffect(() => {
-    if (user && !realms) {
-      getRealms(user.$id, realmStore);
+    if (user && !realms && !realmsIsLoading) {
+      getRealms(user.$id, realmStore, setRealmsIsLoading);
     }
   }, [user]);
 
@@ -74,7 +80,7 @@ export default function Conmbobox() {
   return (
     <>
       {realms && selected ? (
-        <div className="w-full border-b border-border-primary pb-3 px-6">
+        <div className="w-fit ml-auto px-6">
           <Combobox value={selected} onChange={onChange}>
             <div className="relative">
               <div className="relative w-full cursor-default rounded-lg shadow-shadow-form-input text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-teal-300 sm:text-sm">
@@ -97,15 +103,15 @@ export default function Conmbobox() {
                 leaveTo="opacity-0"
                 afterLeave={() => setQuery("")}
               >
-                <Combobox.Options className="absolute mt-2 max-h-60 w-full overflow-auto rounded-md text-base shadow-sm ring-1 ring-black ring-opacity-5 bg-bg-primary-light focus:outline-none sm:text-sm">
+                <Combobox.Options className="absolute z-20 mt-2 max-h-60 w-full overflow-auto rounded-md text-base shadow-sm ring-1 ring-black ring-opacity-5 bg-bg-primary-light focus:outline-none sm:text-sm">
                   {filteredRealms?.length === 0 && query !== "" ? (
                     <div className="relative cursor-default select-none py-2 flex items-center px-4 pl-6 text-text-primary">
                       <p>Nothing found.</p>
                     </div>
                   ) : (
-                    filteredRealms?.map((realm) => (
+                    filteredRealms?.map((realm, i) => (
                       <Combobox.Option
-                        key={realm.id}
+                        key={realm.id + i}
                         className={({ active }) =>
                           `relative cursor-default select-none py-2 pl-10 pr-4 ${
                             active
@@ -174,10 +180,10 @@ export default function Conmbobox() {
           </Combobox>
         </div>
       ) : (
-        <div className="w-full border-b mt-1 border-border-primary relative flex items-center pb-6 px-6">
+        <div className="w-fir ml-auto relative flex items-center px-6">
           <button
             onClick={() => setNewRealmModal(true)}
-            className="relative py-2 gap-2 cursor-pointer w-full pl-3 flex rounded-lg border border-border-primary shadow-shadow-form-input text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-opacity-75 focus-visible:ring-offset-0 focus-visible:ring-offset-teal-300 sm:text-sm"
+            className="relative py-2 gap-2 cursor-pointer w-full pl-3 px-3 flex rounded-lg border border-border-primary shadow-shadow-form-input text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-opacity-75 focus-visible:ring-offset-0 focus-visible:ring-offset-teal-300 sm:text-sm"
           >
             <span
               className={`inset-y-0 left-0 flex items-center 
