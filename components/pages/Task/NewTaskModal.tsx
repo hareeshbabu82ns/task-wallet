@@ -129,6 +129,7 @@ const NewTaskModal: React.FC<{
       description: descriptionInput.value,
       from: fromInput.value,
       to: toInput.value,
+      onSuccess: () => {},
     });
   };
 
@@ -157,11 +158,11 @@ const NewTaskModal: React.FC<{
               <Transition.Child
                 as={Fragment}
                 enter="ease-out duration-300"
-                enterFrom="opacity-0 scale-95"
+                enterFrom="opacity-0 scale-85"
                 enterTo="opacity-100 scale-100"
                 leave="ease-in duration-200"
                 leaveFrom="opacity-100 scale-100"
-                leaveTo="opacity-0 scale-95"
+                leaveTo="opacity-0 scale-85"
               >
                 <Dialog.Panel className="text-text-primary  w-full max-h[80vh]  transform overflow-hidden  px-6 text-left align-middle  transition-all">
                   <Dialog.Title

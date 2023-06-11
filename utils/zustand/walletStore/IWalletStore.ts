@@ -5,6 +5,7 @@ export type IWallteStore = {
   realm: string | null;
   isLoading: boolean;
   id: string | null;
+  filters?: { [key: string]: string } | null;
   transactions: ITransaction[] | null;
   setBalance: (
     balance: number,
@@ -33,4 +34,5 @@ export type ITransaction = {
   $permissions: string[];
   $collectionId: string;
   $databaseId: string;
+  method: string;
 };

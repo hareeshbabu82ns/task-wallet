@@ -34,7 +34,7 @@ const NewTransactionModal: React.FC<{
 
   const walletStore = useWalletStore((s) => s);
 
-  const { balance, id: walletId, debit, credit } = walletStore;
+  const { balance, id: walletId, debit, credit, isLoading } = walletStore;
 
   const transactionTypeInput = useInput<string>(
     validators.charactersValidator(0, 20),
@@ -75,19 +75,20 @@ const NewTransactionModal: React.FC<{
     setSelectedDate(event.target.value);
   };
 
-  const formatDateString = (dateString: string) => {
-    const date = new Date(dateString);
-    const formattedDate = date.toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "2-digit",
-      day: "2-digit",
-    });
-    return formattedDate;
-  };
-
   function closeModal() {
     props.setOpen(false);
   }
+
+  const onSuccess = () => {
+    props.setOpen(false);
+    transactionMethodInput.resetInput();
+    transactionTypeInput.resetInput();
+    amountInput.resetInput();
+    fromInput.resetInput();
+    toInput.resetInput();
+    descriptionInput.resetInput();
+    setSelectedDate(formatDate(new Date()));
+  };
 
   const onSubmit: React.FormEventHandler = async (e) => {
     e.preventDefault();
@@ -126,6 +127,7 @@ const NewTransactionModal: React.FC<{
       userId: user?.$id,
       walletStore,
       method: transactionMethodInput.value,
+      onSuccess,
       description: descriptionInput.value,
       from: fromInput.value,
       to: toInput.value,
@@ -247,7 +249,11 @@ const NewTransactionModal: React.FC<{
                       />
                     </div>
                     <div className="w-full flex col-[1/-1] justify-end">
-                      <ButtonPrimary text="Submit" className="w-fit" />
+                      <ButtonPrimary
+                        isLoading={isLoading}
+                        text="Submit"
+                        className="w-fit"
+                      />
                     </div>
                   </form>
                 </Dialog.Panel>

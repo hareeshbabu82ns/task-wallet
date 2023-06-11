@@ -31,3 +31,71 @@ body {
   background-color: red !important;
   -webkit-text-fill-color: aqua !important;
 }
+
+.Calendar__day,
+.Calendar__monthText,
+.Calendar__yearText {
+  color: rgb(255, 255, 255) !important;
+}
+
+.Calendar__monthText:hover,
+.Calendar__monthText:hover {
+  color: rgb(255, 255, 255) !important;
+  /* color: #212529 !important; */
+}
+
+.Calendar__day.-selectedEnd,
+.Calendar__day.-selectedStart,
+.Calendar__day.-selectedBetween {
+  background-color: #1864ab !important;
+}
+
+.Calendar__monthArrowWrapper {
+  background-color: #ffffff !important;
+  border-radius: 50%;
+}
+
+.Calendar__day.-selectedBetween,
+.Calendar__yearSelectorText:hover,
+.Calendar__monthSelectorItemText:hover {
+  background-color: #2490e2 !important;
+}
+
+.Calendar__day:not(.-blank):not(.-selectedStart):not(.-selectedEnd):not(
+    .-selectedBetween
+  ):not(.-selected):hover {
+  background: #2490e2 !important;
+  border-radius: 50%;
+  color: var(--cl-color-black);
+  border-color: transparent;
+}
+
+.Calendar__monthText:hover,
+.Calendar__yearText:hover {
+  background: #2490e2 !important;
+  /* color: #212529 !important; */
+}
+
+.Calendar__monthSelector,
+.Calendar__yearSelector {
+  background: #212529 !important;
+}
+
+.Calendar__monthSelector::after,
+.Calendar__monthSelector::before,
+.Calendar__yearSelectorWrapper::after,
+.Calendar__yearSelectorWrapper::before {
+  background: none !important;
+}
+
+.css-qa7bje-MuiButtonBase-root-MuiPickersDay-root,
+.css-rhmlg1-MuiTypography-root-MuiDayCalendar-weekDayLabel,
+.css-1tkx1wf-MuiSvgIcon-root-MuiPickersCalendarHeader-switchViewIcon,
+.css-1vooibu-MuiSvgIcon-root,
+.css-1hbyad5-MuiTypography-root {
+  color: white !important;
+}
+
+.css-hlj6pa-MuiDialogActions-root {
+  display: none !important;
+}

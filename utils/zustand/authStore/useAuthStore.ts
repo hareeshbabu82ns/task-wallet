@@ -14,6 +14,10 @@ client
 export const useAuthStore = create<IAuthStore>((set) => ({
   loggedIn: false,
   user: null,
+  isLoading: false,
+  setIsLoading: (isLoading) => {
+    set({ isLoading });
+  },
   setUser: (loggedIn, user) => {
     set({ loggedIn, user });
   },
@@ -21,10 +25,13 @@ export const useAuthStore = create<IAuthStore>((set) => ({
 
 export const getUser = async (authStore: IAuthStore) => {
   try {
+    authStore.setIsLoading(true);
     const userDetails = await account.get();
     authStore.setUser(true, userDetails);
     console.log(userDetails);
+    authStore.setIsLoading(false);
   } catch (error: any) {
+    authStore.setIsLoading(false);
     authStore.setUser(false, null);
   }
 };
@@ -36,6 +43,7 @@ export const signUp = async (
   authStore: IAuthStore
 ) => {
   try {
+    authStore.setIsLoading(true);
     const userDetails = await account.create(
       ID.unique(),
       email,
@@ -56,8 +64,10 @@ export const signUp = async (
     authStore.setUser(true, userDetails);
     console.log(profileRes);
     toast.success("Account created successfully");
+    authStore.setIsLoading(false);
   } catch (error: any) {
     console.log(error);
+    authStore.setIsLoading(false);
     toast.error(error?.message || "Something Went Wrong!");
   }
 };
@@ -68,19 +78,20 @@ export const loginUser = async (
   authStore: IAuthStore
 ) => {
   try {
+    authStore.setIsLoading(true);
     await account.createEmailSession(email, password);
     const userDetails = await account.get();
     authStore.setUser(true, userDetails);
-    console.log(userDetails);
+    authStore.setIsLoading(false);
   } catch (error: any) {
     console.log(error);
+    authStore.setIsLoading(false);
     toast.error(error?.message || "Something Went Wrong!");
   }
 };
 
 export const logoutUser = async (authStore: IAuthStore) => {
   try {
-    console.log(await account.deleteSessions());
     authStore.setUser(false, null);
   } catch (error: any) {
     console.log(error);

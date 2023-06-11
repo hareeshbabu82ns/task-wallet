@@ -17,6 +17,7 @@ export const useWalletStore = create<IWallteStore>((set) => ({
   realm: null,
   id: null,
   transactions: null,
+  filters: null,
   setTransactions: (transactions) => {
     set({ transactions });
   },
@@ -59,7 +60,7 @@ export const getRealmBalance = async (input: {
     }
   } catch (error: any) {
     console.log(error);
-    input.walletStore.setisLoading(true);
+    input.walletStore.setisLoading(false);
     toast.error(error?.message || "Something Went Wrong!");
   }
 };
@@ -88,7 +89,7 @@ export const createRealmWallet = async (input: {
     input.walletStore.setisLoading(false);
   } catch (error: any) {
     console.log(error);
-    input.walletStore.setisLoading(true);
+    input.walletStore.setisLoading(false);
     toast.error(error?.message || "Something Went Wrong!");
   }
 };
@@ -101,11 +102,13 @@ export const createTransaction = async (input: {
   realm: string;
   method: string;
   walletStore: IWallteStore;
+  onSuccess: () => void;
   description?: string;
   to?: string;
   from?: string;
 }) => {
   try {
+    input.walletStore.setisLoading(true);
     const {
       balance: currentBalance,
       credit: currentCredit,
@@ -176,16 +179,14 @@ export const createTransaction = async (input: {
       res as ITransaction,
       ...(input.walletStore.transactions || []),
     ];
-    // .sort((a, b) => {
-    //   const dateA = new Date(a.date).getTime();
-    //   const dateB = new Date(b.date).getTime();
-    //   return dateB - dateA;
-    // });
 
     input.walletStore.setTransactions(newArray);
     console.log(res);
+    input.onSuccess();
+    input.walletStore.setisLoading(false);
   } catch (error: any) {
     console.log(error);
+    input.walletStore.setisLoading(false);
     toast.error(error?.message || "Something Went Wrong!");
   }
 };
@@ -194,17 +195,47 @@ export const getTransactions = async (input: {
   walletStore: IWallteStore;
   userId: string;
   realm: string;
+  filters?: {
+    transactionType?: string;
+    transactionMedthod?: string;
+    toDate?: string;
+  };
 }) => {
   try {
-    input.walletStore.setisLoading(true);
+    const { realm, userId, walletStore, filters } = input;
+
+    console.log(filters?.toDate);
+    walletStore.setisLoading(true);
+    const queryList = [
+      Query.equal("userId", userId),
+      Query.equal("realm", realm),
+    ];
+    filters?.transactionType &&
+      queryList.push(Query.equal("type", filters?.transactionType));
+
+    filters?.transactionMedthod &&
+      queryList.push(Query.equal("method", filters.transactionMedthod));
+
+    const date = filters?.toDate && new Date(filters?.toDate);
+
+    const dateString = date && date.setDate(date.getDate() + 1);
+
+    dateString &&
+      queryList.push(
+        Query.lessThan("date", new Date(dateString).toISOString())
+      );
+
     const res = await database.listDocuments(
       process.env.NEXT_PUBLIC_DATABASE_ID || "",
       process.env.NEXT_PUBLIC_TRANSACTION_COLLECTION_ID || "",
-      [Query.equal("userId", input.userId), Query.equal("realm", input.realm)]
+      queryList
     );
-    input.walletStore.setTransactions(res.documents as ITransaction[]);
+    walletStore.setTransactions(res.documents as ITransaction[]);
+    walletStore.setisLoading(false);
+    console.log(res);
   } catch (error: any) {
     console.log(error);
+    input.walletStore.setisLoading(false);
     toast.error(error?.message || "Something Went Wrong!");
   }
 };

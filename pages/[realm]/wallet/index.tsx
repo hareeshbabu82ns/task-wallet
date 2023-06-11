@@ -53,7 +53,7 @@ const WalletPage = () => {
   }, [user, currentRealm]);
 
   return (
-    <div className="p-20 py-6 relative flex flex-col gap-10 h-fit">
+    <div className="p-10 py-3 relative flex flex-col gap-4 h-full">
       <button
         onClick={() => setNewTransactionModal(true)}
         className="p-1 bg-gradient-to-b from-primary to-secondary justify-center flex items-center gap-2 fixed rounded-full right-[4rem] bottom-[4rem]"
@@ -65,8 +65,12 @@ const WalletPage = () => {
         open={newTransactionModal}
       />
       <WalletHeader />
-      <div className="my-4 mt-2 w-full rounded-2xl flex flex-col gap-3 shadow-shadow-form-input px-6 py-6">
+      <div className="my-4 mt-2 w-full rounded-2xl flex grow h-full overflow-scroll flex-col gap-3 shadow-shadow-form-input px-6 py-6">
         <h2 className="mb-2 px-2 text-xl font-medium ">Transactions</h2>
+        {transactions &&
+          transactions.map((transaction, i) => (
+            <TransactionCard transaction={transaction} key={i} />
+          ))}
         {transactions &&
           transactions.map((transaction, i) => (
             <TransactionCard transaction={transaction} key={i} />

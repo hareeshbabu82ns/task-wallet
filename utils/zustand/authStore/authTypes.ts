@@ -1,6 +1,8 @@
 export type IAuthStore = {
   loggedIn: boolean;
   user: null | IUser;
+  isLoading: boolean;
+  setIsLoading: (isLoading: boolean) => void;
   setUser: (loggedIn: boolean, user: IUser | null) => void;
 };
 

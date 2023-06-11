@@ -67,22 +67,22 @@ export default function Conmbobox() {
   }, [user]);
 
   useEffect(() => {
-    if (selected && !router.pathname.includes(selected?.name.toLowerCase())) {
-      router.push({
-        pathname: `/[realm]`,
-        query: {
-          realm: currentRealm?.name,
-        },
-      });
-    }
+    // if (selected && !router.pathname.includes(selected?.name.toLowerCase())) {
+    //   router.push({
+    //     pathname: `/[realm]`,
+    //     query: {
+    //       realm: currentRealm?.name,
+    //     },
+    //   });
+    // }
   }, [selected]);
 
   return (
     <>
       {realms && selected ? (
-        <div className="w-fit ml-auto px-6">
+        <div className="w-fit ml-auto">
           <Combobox value={selected} onChange={onChange}>
-            <div className="relative">
+            <div className="relative z-20">
               <div className="relative w-full cursor-default rounded-lg shadow-shadow-form-input text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-teal-300 sm:text-sm">
                 <Combobox.Input
                   className="w-full border-none py-2 pl-3 bg-transparent focus:outline-none text-text-primary pr-10 text-sm leading-5 focus:ring-0"
