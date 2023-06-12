@@ -71,10 +71,6 @@ const WalletPage = () => {
           transactions.map((transaction, i) => (
             <TransactionCard transaction={transaction} key={i} />
           ))}
-        {transactions &&
-          transactions.map((transaction, i) => (
-            <TransactionCard transaction={transaction} key={i} />
-          ))}
         {!transactions ||
           (transactions.length === 0 && (
             <h1 className="text-center text-lg my-5">No Transaction Found!</h1>

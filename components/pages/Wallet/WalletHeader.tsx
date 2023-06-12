@@ -55,11 +55,11 @@ const WalletHeader = () => {
 
   const [showCalender, setShowCalender] = useState(false);
 
-  useEffect(() => {
-    if (selectedDay) {
-      console.log(new Date(selectedDay.toString()).toISOString());
-    }
-  }, [selectedDay]);
+  const [input, setInput] = useState("");
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setInput(e.target.value);
+  };
 
   useEffect(() => {
     if (currentRealm && user) {
@@ -77,10 +77,16 @@ const WalletHeader = () => {
               ? undefined
               : transactionMethodInput.value.toLowerCase(),
           toDate: selectedDay ? selectedDay.toISOString() : undefined,
+          search: input ? input : undefined,
         },
       });
     }
-  }, [transactionTypeInput.value, transactionMethodInput.value, selectedDay]);
+  }, [
+    transactionTypeInput.value,
+    transactionMethodInput.value,
+    selectedDay,
+    input,
+  ]);
 
   useEffect(() => {
     // Function to be executed on click
@@ -104,7 +110,10 @@ const WalletHeader = () => {
     <div className="w-full py-3 justify-center gap-14  inset-0 flex">
       <div className="grow flex flex-col gap-2">
         <div className="relative">
-          <input className="w-full pl-12 autofill:!text-red-200 outline-1 outline-offset-2 focus:outline-none bg-bg-primary shadow-shadow-form-input rounded-2xl py-2" />
+          <input
+            onChange={handleInputChange}
+            className="w-full pl-12 autofill:!text-red-200 outline-1 outline-offset-2 focus:outline-none bg-bg-primary shadow-shadow-form-input rounded-2xl py-2"
+          />
           <IoIcons.IoSearch className="absolute top-1/2 -translate-y-1/2 left-4 min-w-5 min-h-5" />
         </div>
         <div className="ml-auto flex gap-3">

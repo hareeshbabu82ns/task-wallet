@@ -160,6 +160,9 @@ export const createTransaction = async (input: {
         description: input.description || "",
         balance: balance,
         method: input.method.toLowerCase(),
+        keywords: `${input?.from ? input.from : input.to || ""} ${
+          input.description
+        }`,
       }
     );
 
@@ -181,7 +184,6 @@ export const createTransaction = async (input: {
     ];
 
     input.walletStore.setTransactions(newArray);
-    console.log(res);
     input.onSuccess();
     input.walletStore.setisLoading(false);
   } catch (error: any) {
@@ -199,6 +201,7 @@ export const getTransactions = async (input: {
     transactionType?: string;
     transactionMedthod?: string;
     toDate?: string;
+    search?: string;
   };
 }) => {
   try {
@@ -206,10 +209,11 @@ export const getTransactions = async (input: {
 
     console.log(filters?.toDate);
     walletStore.setisLoading(true);
-    const queryList = [
-      Query.equal("userId", userId),
-      Query.equal("realm", realm),
-    ];
+    const queryList = [];
+
+    queryList.push(Query.equal("userId", userId));
+    queryList.push(Query.equal("realm", realm));
+
     filters?.transactionType &&
       queryList.push(Query.equal("type", filters?.transactionType));
 
@@ -224,6 +228,12 @@ export const getTransactions = async (input: {
       queryList.push(
         Query.lessThan("date", new Date(dateString).toISOString())
       );
+
+    if (filters?.search) {
+      queryList.push(Query.search("keywords", filters.search));
+    }
+
+    console.log(queryList);
 
     const res = await database.listDocuments(
       process.env.NEXT_PUBLIC_DATABASE_ID || "",
