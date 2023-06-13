@@ -154,7 +154,7 @@ const NewTransactionModal: React.FC<{
             <div className="fixed z-50 inset-0 bg-black bg-opacity-25 backdrop-blur-[1.5px] " />
           </Transition.Child>
 
-          <div className="fixed z-50 inset-0 overflow-y-auto w-[max(50vh,40vw)] h-fit rounded-2xl bg-bg-primary top-1/2 py-4  left-1/2 -translate-x-1/2 shadow-lg -translate-y-1/2">
+          <div className="fixed z-50 inset-0 overflow-y-auto w-[min(80vh,80vw)] h-fit rounded-2xl bg-bg-primary top-1/2 py-4  left-1/2 -translate-x-1/2 shadow-lg -translate-y-1/2">
             <div className="flex min-h-full items-center justify-center p-4 text-center w-full">
               <Transition.Child
                 as={Fragment}
@@ -175,7 +175,7 @@ const NewTransactionModal: React.FC<{
                   <form
                     noValidate
                     onSubmit={onSubmit}
-                    className="grid gap-10 gap-y-10 grid-cols-2"
+                    className="grid gap-10 gap-y-10 grid-cols-2 max-[700px]:grid-cols-1"
                   >
                     <FormInputList
                       lable="Credit/Debit"

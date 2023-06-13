@@ -8,9 +8,6 @@ import { ToastContainer } from "react-toastify";
 const inter = Inter({ subsets: ["latin"] });
 import "react-toastify/dist/ReactToastify.css";
 import { getUser, useAuthStore } from "@/utils/zustand/authStore/useAuthStore";
-
-import { useRealmStore } from "@/utils/zustand/realm/useRealmStore";
-import SecondaryNavbar from "@/components/shared/SecondaryNavbar";
 import Sidebar from "@/components/shared/Sidebar/Sidebar";
 
 export default function App({ Component, pageProps }: AppProps) {
@@ -19,8 +16,6 @@ export default function App({ Component, pageProps }: AppProps) {
   const [showSideBar, setShowSidebar] = useState(false);
 
   const authStore = useAuthStore((s) => s);
-
-  const { currentRealm } = useRealmStore((s) => s);
 
   useEffect(() => {
     if (pagesWithoutSidebar.includes(router.pathname)) {
@@ -35,15 +30,15 @@ export default function App({ Component, pageProps }: AppProps) {
   }, []);
 
   return (
-    <main className="p-6 bg-bg-primary min-h-screen">
+    <main className="p-6 bg-bg-primary min-h-screen max-[1200px]:p-0">
       <ToastContainer toastClassName={"bg-red-200"} theme="dark" />
       <div
-        className={`flex rounded-2xl bg-bg-primary max-h-[calc(100vh-3rem)] min-h-[calc(100vh-3rem)] overflow-hidden text-text-primary  shadow-shadow-primary flex-col ${inter.className}`}
+        className={`flex rounded-2xl bg-bg-primary max-h-[calc(100vh-3rem)] min-h-[calc(100vh-3rem)] max-[1200px]:max-h-[100vh] max-[1200px]:rounded-none max-[1200px]:min-h-[100vh] overflow-hidden text-text-primary  shadow-shadow-primary flex-col ${inter.className}`}
       >
         <Navbar />
 
         <div className="flex relative w-full min-h-full grow">
-          <div className="grow flex overflow-scroll relative">
+          <div className="grow flex  max-[900px]:flex-col-reverse overflow-scroll relative">
             {/* <SecondaryNavbar />  */}
 
             <Sidebar />

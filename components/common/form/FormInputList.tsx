@@ -44,7 +44,7 @@ const FormInputList = <T,>(props: Props<T>) => {
       }}
       multiple={multiple}
     >
-      <div className="relative flex flex-col gap-2">
+      <div className="relative flex flex-col gap-2 w-full">
         <label
           className="text-grey-light"
           htmlFor={`form-${lable.toLowerCase().split(" ").join("-")}`}
@@ -104,7 +104,7 @@ const FormInputList = <T,>(props: Props<T>) => {
                     {selected ? (
                       <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-amber-600">
                         <FaCheck
-                          className="h-5 w-5 text-secondary"
+                          className="h-5 w-5 text-green-600"
                           aria-hidden="true"
                         />
                       </span>

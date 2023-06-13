@@ -1,11 +1,24 @@
 import Kanban from "@/components/pages/Task/Kanban";
 import NewTaskModal from "@/components/pages/Task/NewTaskModal";
 import TaskPageHeader from "@/components/pages/Task/TaskPageHeader";
-import React, { useState } from "react";
+import { useAuthStore } from "@/utils/zustand/authStore/useAuthStore";
+import { useRealmStore } from "@/utils/zustand/realm/useRealmStore";
+import { getTasks } from "@/utils/zustand/taskStore/useTaskStore";
+import React, { useEffect, useState } from "react";
 import { IoIosAdd } from "react-icons/io";
 
 const TasksPage = () => {
   const [newTransactionModal, setNewTransactionModal] = useState(false);
+
+  const { user } = useAuthStore((s) => s);
+
+  const { currentRealm } = useRealmStore((s) => s);
+
+  useEffect(() => {
+    if (currentRealm && user) {
+      getTasks({ userId: user.$id, realm: currentRealm.name });
+    }
+  }, [user, currentRealm]);
 
   return (
     <div className="p-10 py-3 relative flex flex-col gap-10 grow h-fit">

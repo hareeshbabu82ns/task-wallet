@@ -102,7 +102,7 @@ const WalletHeader: React.FC<{
   }, []);
 
   return (
-    <div className="w-full py-3 justify-center gap-14 flex-wrap  inset-0 flex">
+    <div className="w-full py-3 gap-5 flex-wrap  inset-0 flex justify-between">
       <div className="flex gap-4">
         <div className="bg-bg-primary ml-auto items-center justify-between shadow-shadow-primary-xsm p-6 py-1 rounded-xl flex gap-5">
           <div className="flex flex-col gap-1 justify-between">
@@ -143,8 +143,8 @@ const WalletHeader: React.FC<{
           </div>
         </div>
       </div>
-      <div className="grow items-center  flex flex-wrap gap-3">
-        <div className="relative ml-auto">
+      <div className="items-center  flex flex-wrap gap-3">
+        <div className="relative">
           <input
             onChange={handleInputChange}
             className="min-w-[18rem] grow w-full text-sm pl-12 autofill:!text-red-200 outline-1 outline-offset-2 focus:outline-none bg-bg-primary shadow-shadow-form-input rounded-md py-1.5"
