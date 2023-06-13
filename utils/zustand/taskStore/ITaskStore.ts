@@ -20,14 +20,17 @@ export type ITaskList = {
   todo: {
     tasks: ITask[] | null;
     tasksIsLoading: boolean;
+    totalLength: number | null;
   };
   "in-progress": {
     tasks: ITask[] | null;
     tasksIsLoading: boolean;
+    totalLength: number | null;
   };
   completed: {
     tasks: ITask[] | null;
     tasksIsLoading: boolean;
+    totalLength: number | null;
   };
 };
 
