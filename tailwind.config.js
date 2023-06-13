@@ -20,12 +20,14 @@ module.exports = {
         "bg-primary": "#212529",
         "bg-primary-light": "#343a40",
         "text-primary": "#f8f9fa",
+        "text-secondary": "#adb5bd",
         "border-primary": "#343a40",
       },
       boxShadow: {
         "shadow-primary": "6px 6px 11px #0f1113,-6px -6px 11px #33393f",
         "shadow-primary-sm": "4px 4px 11px #181b1e, -4px -4px 11px #33393f",
-        "shadow-primary-xsm": "2px 2px 7px #181b1e, -2px -2px 7px #33393f",
+        "shadow-primary-xsm":
+          "1.5px 1.5px 4px #181b1e, -1.5px -1.5px 4px #33393f",
         "shadow-form-input":
           "inset 3px 3px 11px #181b1e,inset -3px -3px 11px #2a2f34",
         "shadow-form-autofill":

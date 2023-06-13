@@ -17,7 +17,10 @@ import FormInputList from "@/components/common/form/FormInputList";
 import { useWalletStore } from "@/utils/zustand/walletStore/useWalletStore";
 import Image from "next/image";
 import { toast } from "react-toastify";
-import { createTask } from "@/utils/zustand/taskStore/useTaskStore";
+import {
+  createTask,
+  useTasksStore,
+} from "@/utils/zustand/taskStore/useTaskStore";
 import {
   ETaskPriorities,
   ETaskStatuses,
@@ -49,6 +52,8 @@ const NewTaskModal: React.FC<{
   const { currentRealm } = useRealmStore((s) => s);
 
   const walletStore = useWalletStore((s) => s);
+
+  const taskStore = useTasksStore((s) => s);
 
   const { balance, id: walletId, debit, credit } = walletStore;
 
@@ -129,10 +134,11 @@ const NewTaskModal: React.FC<{
     }
 
     createTask({
+      taskStore: taskStore,
       description: descriptionInput.value,
       priority: priorityInput.value.toLowerCase(),
       realm: currentRealm.name,
-      status: statusInput.value.toLowerCase(),
+      status: statusInput.value.toLowerCase() as ETaskStatuses,
       title: titleInput.value,
       userId: user.$id,
       onSuccess,

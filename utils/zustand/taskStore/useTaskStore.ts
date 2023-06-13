@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { Client, ID, Databases, Query, Storage } from "appwrite";
 import { toast } from "react-toastify";
-import { ITaskStore } from "./ITaskStore";
+import { ETaskStatuses, ITaskList, ITaskStore } from "./ITaskStore";
 
 const client = new Client();
 const database = new Databases(client);
@@ -19,9 +19,10 @@ export const useTasksStore = create<ITaskStore>((set) => ({
 }));
 
 export const createTask = async (input: {
+  taskStore: ITaskStore;
   userId: string;
   realm: string;
-  status: string;
+  status: ETaskStatuses;
   priority: string;
   title: string;
   description: string;
@@ -41,6 +42,7 @@ export const createTask = async (input: {
       images,
       setIsLoading,
       onSuccess,
+      taskStore,
     } = input;
 
     setIsLoading(true);
@@ -62,7 +64,7 @@ export const createTask = async (input: {
       );
     }
 
-    const res = await database.createDocument(
+    const res: any = await database.createDocument(
       process.env.NEXT_PUBLIC_DATABASE_ID || "",
       process.env.NEXT_PUBLIC_TASKS_COLLECTION_ID || "",
       ID.unique(),
@@ -73,13 +75,22 @@ export const createTask = async (input: {
         status,
         priority,
         description: description,
-        keywords: `${title} ${description}`,
+        keywords: `${title}`,
         images: imagesUrl,
       }
     );
 
-    setIsLoading(false);
+    // if( taskStore?.tasks && taskStore?.tasks[status]){
 
+    if (taskStore.tasks) {
+      const updatedTasks = Object.assign(taskStore?.tasks, {});
+
+      updatedTasks[status].tasks = [res, ...(updatedTasks[status].tasks || [])];
+
+      taskStore.setTasks(updatedTasks);
+    }
+
+    setIsLoading(false);
     onSuccess();
   } catch (error: any) {
     input.setIsLoading(false);
@@ -87,15 +98,63 @@ export const createTask = async (input: {
   }
 };
 
-export const getTasks = async (input: { userId: string; realm: string }) => {
-  // const { realm, userId } = input;
+export const getTasks = async (input: {
+  taskStore: ITaskStore;
+  userId: string;
+  realm: string;
+}) => {
+  const { realm, userId, taskStore } = input;
 
-  // const imagesUrl: string[] = [];
-
-  const res = await database.listDocuments(
+  const todoTasks = await database.listDocuments(
     process.env.NEXT_PUBLIC_DATABASE_ID || "",
-    process.env.NEXT_PUBLIC_TASKS_COLLECTION_ID || ""
+    process.env.NEXT_PUBLIC_TASKS_COLLECTION_ID || "",
+    [
+      Query.equal("userId", userId),
+      Query.equal("realm", realm),
+      Query.equal("status", ETaskStatuses.todo),
+      Query.limit(20),
+      Query.orderDesc("$id"),
+    ]
   );
 
-  console.log(res);
+  const inProgressTasks = await database.listDocuments(
+    process.env.NEXT_PUBLIC_DATABASE_ID || "",
+    process.env.NEXT_PUBLIC_TASKS_COLLECTION_ID || "",
+    [
+      Query.equal("userId", userId),
+      Query.equal("realm", realm),
+      Query.equal("status", ETaskStatuses["in-progress"]),
+      Query.limit(20),
+      Query.orderDesc("$id"),
+    ]
+  );
+
+  const completedTasks = await database.listDocuments(
+    process.env.NEXT_PUBLIC_DATABASE_ID || "",
+    process.env.NEXT_PUBLIC_TASKS_COLLECTION_ID || "",
+    [
+      Query.equal("userId", userId),
+      Query.equal("realm", realm),
+      Query.equal("status", ETaskStatuses.completed),
+      Query.limit(20),
+      Query.orderDesc("$id"),
+    ]
+  );
+
+  const tasks: ITaskList = {
+    todo: {
+      tasks: todoTasks.documents as any,
+      tasksIsLoading: false,
+    },
+    "in-progress": {
+      tasks: inProgressTasks.documents as any,
+      tasksIsLoading: false,
+    },
+    completed: {
+      tasks: completedTasks.documents as any,
+      tasksIsLoading: false,
+    },
+  };
+
+  taskStore.setTasks(tasks);
 };

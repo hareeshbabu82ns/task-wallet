@@ -17,19 +17,17 @@ export type ITaskStore = {
 };
 
 export type ITaskList = {
-  tasks: {
-    todo: {
-      tasks: ITask[] | null;
-      tasksIsLoading: boolean;
-    };
-    "in-progress": {
-      tasks: ITask[] | null;
-      tasksIsLoading: boolean;
-    };
-    completed: {
-      tasks: ITask[] | null;
-      tasksIsLoading: boolean;
-    };
+  todo: {
+    tasks: ITask[] | null;
+    tasksIsLoading: boolean;
+  };
+  "in-progress": {
+    tasks: ITask[] | null;
+    tasksIsLoading: boolean;
+  };
+  completed: {
+    tasks: ITask[] | null;
+    tasksIsLoading: boolean;
   };
 };
 
@@ -44,9 +42,9 @@ export type ITask = {
   dueDate: null;
   images: string[];
   keywords: string;
-  priority: string;
+  priority: ETaskPriorities;
   realm: string;
-  status: string;
+  status: ETaskStatuses;
   tags: string[];
   title: string;
   userId: string;

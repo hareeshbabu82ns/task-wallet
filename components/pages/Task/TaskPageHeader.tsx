@@ -22,7 +22,7 @@ const TaskPageHeader = () => {
   const { balance, realm, credit, debit } = walletStore;
 
   return (
-    <div className="w-full py-3 justify-center gap-14  inset-0 flex">
+    <div className="w-full justify-center gap-14  inset-0 flex">
       <div className="grow flex flex-col gap-2">
         <div className="relative">
           <input className="w-full pl-12 autofill:!text-red-200 outline-1 outline-offset-2 focus:!outline-blue-700 bg-bg-primary shadow-shadow-form-input rounded-2xl py-2" />
