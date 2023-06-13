@@ -45,7 +45,7 @@ const FilterOptions = <T,>(props: Props<T>) => {
           onBlur={onBlur}
           className={`relative z-10 flex w-full min-w-[9rem] max-w-[9rem] items-center rounded-lg bg-bg-primary px-3 py-1.5 shadow-shadow-form-input outline-1 outline-offset-2 focus:!outline-blue-700`}
         >
-          <span className="max-w-[94%] overflow-hidden text-ellipsis whitespace-nowrap">
+          <span className="max-w-[94%] overflow-hidden text-ellipsis text-sm whitespace-nowrap">
             {(typeof value === "string" &&
               (value === "All" ? props.label : value)) ||
               (Array.isArray(value) &&

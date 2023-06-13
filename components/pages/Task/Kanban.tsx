@@ -14,6 +14,6 @@ export default Kanban;
 
 const TasksColumn: React.FC<{ heading: string }> = () => {
   return (
-    <div className="w-full h-full shadow-shadow-form-input max-w-sm rounded-2xl"></div>
+    <div className="w-full h-full shadow-shadow-form-input rounded-2xl"></div>
   );
 };

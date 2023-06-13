@@ -8,8 +8,9 @@ import FilterOptions from "@/components/common/filters/FilterOptions";
 
 const transactionTypes = [
   { name: "All", value: "" },
-  { name: "Credit", value: "" },
-  { name: "Debit", value: "" },
+  { name: "Todo", value: "todo" },
+  { name: "In-Progress", value: "in-progress" },
+  { name: "conpleted", value: "completed" },
 ];
 
 const TaskPageHeader = () => {
@@ -31,6 +32,7 @@ const TaskPageHeader = () => {
       <div className="ml-auto">
         <FilterOptions
           multiple={false}
+          label="AS"
           {...transactionTypeInput}
           options={transactionTypes}
         />

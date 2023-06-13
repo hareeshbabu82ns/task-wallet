@@ -8,7 +8,7 @@ const TasksPage = () => {
   const [newTransactionModal, setNewTransactionModal] = useState(false);
 
   return (
-    <div className="p-20 py-6 relative flex flex-col gap-10 grow h-fit">
+    <div className="p-10 py-3 relative flex flex-col gap-10 grow h-fit">
       <button
         onClick={() => setNewTransactionModal(true)}
         className="p-1 bg-gradient-to-b from-primary to-secondary justify-center flex items-center gap-2 fixed rounded-full right-[4rem] bottom-[4rem]"

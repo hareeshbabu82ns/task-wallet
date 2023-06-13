@@ -12,6 +12,7 @@ type Props = {
   onFocus: () => void;
   error: boolean;
   isTouched: boolean;
+  highlight?: boolean;
   labelColor?: string;
   min?: number;
 };
@@ -30,6 +31,7 @@ const FormInput: React.FC<Props> = (props) => {
     error,
     min,
     isTouched,
+    highlight = true,
   } = props;
 
   const labelModifier = labelColor ? labelColor : "currentColor";
@@ -59,7 +61,7 @@ const FormInput: React.FC<Props> = (props) => {
           className={`input2 w-full rounded-lg px-3 py-1.5 shadow-shadow-form-input !bg-transparent autofill:shadow-shadow-form-autofill autofill:!text-red-200 outline-0 outline-offset-2 focus:outline-blue-700 ${
             hasError
               ? "outline !outline-1 outline-red-500"
-              : !error && isTouched
+              : !error && isTouched && highlight
               ? "outline !outline-1 !outline-green-600"
               : ""
           }`}

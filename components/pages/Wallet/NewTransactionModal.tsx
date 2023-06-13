@@ -222,6 +222,7 @@ const NewTransactionModal: React.FC<{
                       lable="Description"
                       errorMessage="min/max = 5/200"
                       labelColor="easd"
+                      highlight={false}
                     />
                     {/* <DatePicker /> */}
                     <div className="z-0 flex flex-col gap-2 w-full">
@@ -248,6 +249,7 @@ const NewTransactionModal: React.FC<{
                         className="input2 fill-red-300 w-full h-fit rounded-lg px-3 py-1.5 shadow-shadow-form-input !bg-transparent autofill:shadow-shadow-form-autofill autofill:!text-red-200 outline-0 outline-offset-2 focus:!outline-blue-700"
                       />
                     </div>
+
                     <div className="w-full flex col-[1/-1] justify-end">
                       <ButtonPrimary
                         isLoading={isLoading}

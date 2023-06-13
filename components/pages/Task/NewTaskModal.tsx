@@ -1,5 +1,6 @@
 import { Dialog, Transition } from "@headlessui/react";
 import React, {
+  ChangeEvent,
   Dispatch,
   Fragment,
   SetStateAction,
@@ -17,10 +18,21 @@ import {
   createTransaction,
   useWalletStore,
 } from "@/utils/zustand/walletStore/useWalletStore";
+import DateInput from "@/components/common/form/DateInput";
+import Image from "next/image";
 
-const typeOption = [{ name: "Credit" }, { name: "Debit" }];
+const statusOptions = [
+  { name: "Todo" },
+  { name: "In-Progress" },
+  { name: "Completed" },
+];
 
-const methodOption = [{ name: "Cash" }, { name: "Online" }];
+const priorityOptions = [
+  { name: "Urgent" },
+  { name: "High" },
+  { name: "Medium" },
+  { name: "Low" },
+];
 
 const NewTaskModal: React.FC<{
   open: boolean;
@@ -36,29 +48,34 @@ const NewTaskModal: React.FC<{
 
   const { balance, id: walletId, debit, credit } = walletStore;
 
-  const transactionTypeInput = useInput<string>(
+  const statusInput = useInput<string>(
     validators.charactersValidator(0, 20),
-    typeOption[0].name
+    statusOptions[0].name
   );
 
-  const transactionMethodInput = useInput<string>(
+  const priorityInput = useInput<string>(
     validators.charactersValidator(0, 20),
-    methodOption[0].name
+    priorityOptions[0].name
   );
 
-  const amountInput = useInput<string>(
-    validators.numberValidator(1, 100000000),
+  const titleInput = useInput<string>(
+    validators.charactersValidator(3, 75),
     ""
   );
-
-  const toInput = useInput<string>(validators.charactersValidator(3, 75), "");
-
-  const fromInput = useInput<string>(validators.charactersValidator(3, 75), "");
 
   const descriptionInput = useInput<string>(
-    validators.charactersValidator(0, 1000000000000000000000),
+    validators.charactersValidator(0, 250),
     ""
   );
+
+  const [image, setImage] = useState<null | File>(null);
+
+  const [imagePreview, setImagePreview] = useState<null | string>(null);
+
+  // const amountInput = useInput<string>(
+  //   validators.numberValidator(1, 100000000),
+  //   ""
+  // );
 
   const formatDate = (date: Date) => {
     const formattedDate = new Date(date);
@@ -75,14 +92,31 @@ const NewTaskModal: React.FC<{
     setSelectedDate(event.target.value);
   };
 
-  const formatDateString = (dateString: string) => {
-    const date = new Date(dateString);
-    const formattedDate = date.toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "2-digit",
-      day: "2-digit",
-    });
-    return formattedDate;
+  const handleImageChange = (ev: ChangeEvent<HTMLInputElement>) => {
+    console.log(ev.target.files);
+    const file = ev.target.files?.length && ev.target.files[0];
+
+    file && setImage(file);
+
+    console.log(file);
+
+    const reader = new FileReader();
+
+    if (file) {
+      reader.readAsDataURL(file);
+    }
+
+    reader.onload = function () {
+      console.log(reader.result);
+      setImagePreview(reader.result as string);
+    };
+
+    // const fileSizeKB = file.size / 1024;
+
+    // if (fileSizeKB > 250) {
+    //   alert("Please select an image file with a size less than 250KB.");
+    //   input.value = ""; // Reset the input to clear the selected file
+    // }
   };
 
   function closeModal() {
@@ -102,35 +136,32 @@ const NewTaskModal: React.FC<{
       return;
 
     if (
-      transactionTypeInput.error ||
-      amountInput.error ||
+      statusInput.error ||
       descriptionInput.error ||
-      transactionMethodInput.error ||
-      (transactionTypeInput.value === "Credit" && fromInput.error) ||
-      (transactionTypeInput.value !== "Credit" && toInput.error)
+      priorityInput.error ||
+      (statusInput.value === "Credit" && titleInput.error) ||
+      (statusInput.value !== "Credit" && descriptionInput.error)
     ) {
-      transactionTypeInput.onBlur();
+      statusInput.onBlur();
       descriptionInput.onBlur();
-      amountInput.onBlur();
-      transactionMethodInput.onBlur();
-      transactionTypeInput.value === "Credit" && fromInput.onBlur();
-      transactionTypeInput.value !== "Credit" && toInput.onBlur();
+      priorityInput.onBlur();
+      statusInput.value === "Credit" && titleInput.onBlur();
+      statusInput.value !== "Credit" && descriptionInput.onBlur();
       return;
     }
 
-    createTransaction({
-      transactionType: transactionTypeInput.value,
-      amount: Number(amountInput.value),
-      date: selectedDate,
-      realm: currentRealm?.name,
-      userId: user?.$id,
-      walletStore,
-      method: transactionMethodInput.value,
-      description: descriptionInput.value,
-      from: fromInput.value,
-      to: toInput.value,
-      onSuccess: () => {},
-    });
+    // createTransaction({
+    //   transactionType: statusInput.value,
+    //   date: selectedDate,
+    //   realm: currentRealm?.name,
+    //   userId: user?.$id,
+    //   walletStore,
+    //   method: priorityInput.value,
+    //   description: descriptionInput.value,
+    //   from: titleInput.value,
+    //   to: descriptionInput.value,
+    //   onSuccess: () => {},
+    // });
   };
 
   return (
@@ -153,7 +184,7 @@ const NewTaskModal: React.FC<{
             <div className="fixed z-50 inset-0 bg-black bg-opacity-25 backdrop-blur-[1.5px] " />
           </Transition.Child>
 
-          <div className="fixed z-50 inset-0 overflow-y-auto w-[max(50vh,40vw)] h-fit rounded-2xl bg-bg-primary top-1/2 py-4  left-1/2 -translate-x-1/2 shadow-lg -translate-y-1/2">
+          <div className="fixed z-50 inset-0 w-[max(50vh,40vw)] overflow-visible h-fit rounded-2xl bg-bg-primary top-1/2 py-4  left-1/2 -translate-x-1/2 shadow-lg -translate-y-1/2">
             <div className="flex min-h-full items-center justify-center p-4 text-center w-full">
               <Transition.Child
                 as={Fragment}
@@ -177,52 +208,34 @@ const NewTaskModal: React.FC<{
                     className="grid gap-10 gap-y-10 grid-cols-2"
                   >
                     <FormInputList
-                      lable="Credit/Debit"
+                      lable="Status*"
                       errorMessage="Select type"
                       multiple={false}
-                      {...transactionTypeInput}
-                      options={typeOption}
+                      {...statusInput}
+                      options={statusOptions}
                     />
                     <FormInputList
-                      lable="Method"
+                      lable="Priority*"
                       errorMessage="Select type"
                       multiple={false}
-                      {...transactionMethodInput}
-                      options={methodOption}
+                      {...priorityInput}
+                      options={priorityOptions}
                     />
                     <FormInput
-                      {...amountInput}
-                      type="number"
-                      lable="Amount"
-                      errorMessage="Must be greater than 0"
+                      {...titleInput}
+                      type="text"
+                      lable="Title*"
+                      errorMessage="Length must be between 3 and 75"
                       labelColor="easd"
-                      min={1}
                     />
-                    {transactionTypeInput.value === "Credit" ? (
-                      <FormInput
-                        {...fromInput}
-                        type="text"
-                        lable="From"
-                        errorMessage="Length must be between 3 and 75"
-                        labelColor="easd"
-                      />
-                    ) : (
-                      <FormInput
-                        {...toInput}
-                        type="text"
-                        lable="To"
-                        errorMessage="Length must be between 3 and 75"
-                        labelColor="easd"
-                      />
-                    )}
                     <FormInput
                       {...descriptionInput}
                       type="text"
                       lable="Description"
-                      errorMessage="min/max = 5/200"
+                      errorMessage="Length must be between 3 and 75"
                       labelColor="easd"
+                      highlight={false}
                     />
-                    {/* <DatePicker /> */}
                     <div className="z-0 flex flex-col gap-2 w-full">
                       <div className={`flex items-center`}>
                         <label
@@ -247,8 +260,53 @@ const NewTaskModal: React.FC<{
                         className="input2 fill-red-300 w-full h-fit rounded-lg px-3 py-1.5 shadow-shadow-form-input !bg-transparent autofill:shadow-shadow-form-autofill autofill:!text-red-200 outline-0 outline-offset-2 focus:!outline-blue-700"
                       />
                     </div>
+                    <div className="z-0 flex flex-col gap-2 w-full">
+                      <label
+                        className="text-grey-light"
+                        htmlFor={`datepickerTasks`}
+                        onClick={() => {
+                          inputRef.current?.click();
+                        }}
+                      >
+                        {"Image"}
+                      </label>
+                      {!imagePreview ? (
+                        <label
+                          className="relative h-fit cursor-pointer z-50 flex w-full items-center bg-bg-primary  input2 rounded-lg px-3 py-1.5 shadow-shadow-form-input !bg-transparent autofill:shadow-shadow-form-autofill autofill:!text-red-200 outline-0 outline-offset-2 focus:outline-blue-700"
+                          htmlFor={`datepickerTasks`}
+                          onClick={() => {
+                            inputRef.current?.click();
+                          }}
+                        >
+                          {"Image"}
+                        </label>
+                      ) : (
+                        <Image
+                          src={imagePreview}
+                          alt="Selected Image"
+                          className="w-7 h-7"
+                          width={32}
+                          height={32}
+                        />
+                      )}
+                      <input
+                        type="file"
+                        id="datepickerTasks"
+                        onClick={() => {
+                          inputRef.current?.click();
+                        }}
+                        onChange={handleImageChange}
+                        placeholder={new Date().getDay().toLocaleString()}
+                        accept="image/*"
+                        className="w-0 h-0 opacity-0 pointer-events-none"
+                      />
+                    </div>
                     <div className="w-full flex col-[1/-1] justify-end">
-                      <ButtonPrimary text="Submit" className="w-fit" />
+                      <ButtonPrimary
+                        // isLoading={isLoading}
+                        text="Submit"
+                        className="w-fit"
+                      />
                     </div>
                   </form>
                 </Dialog.Panel>

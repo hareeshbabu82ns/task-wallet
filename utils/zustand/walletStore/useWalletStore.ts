@@ -18,8 +18,15 @@ export const useWalletStore = create<IWallteStore>((set) => ({
   id: null,
   transactions: null,
   filters: null,
-  setTransactions: (transactions) => {
-    set({ transactions });
+  transactionsIsLoading: false,
+  newPageIsLoading: false,
+  hasMore: false,
+  page: null,
+  setTransactionsIsLoading: (transactionsIsLoading) => {
+    set({ transactionsIsLoading });
+  },
+  setTransactions: (transactions, page, hasMore) => {
+    set({ transactions, page, hasMore });
   },
   setBalance: (balance, credit, debit, realm, id) => {
     set({ balance, realm, credit, debit, id });
@@ -27,6 +34,9 @@ export const useWalletStore = create<IWallteStore>((set) => ({
   isLoading: false,
   setisLoading: (isLoading) => {
     set({ isLoading });
+  },
+  setNewPageIsLoading: (newPageIsLoading) => {
+    set({ newPageIsLoading });
   },
 }));
 
@@ -49,7 +59,6 @@ export const getRealmBalance = async (input: {
         walletStore: input.walletStore,
       });
     } else {
-      console.log(res.documents);
       input.walletStore.setBalance(
         res.documents[0].balance,
         res.documents[0].credit,
@@ -58,6 +67,7 @@ export const getRealmBalance = async (input: {
         res.documents[0].$id
       );
     }
+    input.walletStore.setisLoading(false);
   } catch (error: any) {
     console.log(error);
     input.walletStore.setisLoading(false);
@@ -183,7 +193,11 @@ export const createTransaction = async (input: {
       ...(input.walletStore.transactions || []),
     ];
 
-    input.walletStore.setTransactions(newArray);
+    input.walletStore.setTransactions(
+      newArray,
+      input.walletStore.page,
+      input.walletStore.hasMore
+    );
     input.onSuccess();
     input.walletStore.setisLoading(false);
   } catch (error: any) {
@@ -197,6 +211,7 @@ export const getTransactions = async (input: {
   walletStore: IWallteStore;
   userId: string;
   realm: string;
+  page: number;
   filters?: {
     transactionType?: string;
     transactionMedthod?: string;
@@ -205,11 +220,15 @@ export const getTransactions = async (input: {
   };
 }) => {
   try {
-    const { realm, userId, walletStore, filters } = input;
+    const { realm, userId, walletStore, filters, page } = input;
 
-    console.log(filters?.toDate);
-    walletStore.setisLoading(true);
-    const queryList = [];
+    walletStore.setTransactionsIsLoading(true);
+
+    if (page > 1) {
+      walletStore.setNewPageIsLoading(true);
+    }
+
+    const queryList = [Query.limit(15), Query.offset((page - 1) * 15)];
 
     queryList.push(Query.equal("userId", userId));
     queryList.push(Query.equal("realm", realm));
@@ -220,32 +239,36 @@ export const getTransactions = async (input: {
     filters?.transactionMedthod &&
       queryList.push(Query.equal("method", filters.transactionMedthod));
 
-    const date = filters?.toDate && new Date(filters?.toDate);
-
-    const dateString = date && date.setDate(date.getDate() + 1);
-
-    dateString &&
-      queryList.push(
-        Query.lessThan("date", new Date(dateString).toISOString())
-      );
+    filters?.toDate && queryList.push(Query.lessThan("date", filters?.toDate));
 
     if (filters?.search) {
       queryList.push(Query.search("keywords", filters.search));
     }
-
-    console.log(queryList);
 
     const res = await database.listDocuments(
       process.env.NEXT_PUBLIC_DATABASE_ID || "",
       process.env.NEXT_PUBLIC_TRANSACTION_COLLECTION_ID || "",
       queryList
     );
-    walletStore.setTransactions(res.documents as ITransaction[]);
-    walletStore.setisLoading(false);
-    console.log(res);
+
+    const prevTransactions = walletStore.transactions || [];
+    const updatedArray = [
+      ...(page > 1 ? prevTransactions : []),
+      ...(res.documents as ITransaction[]),
+    ];
+
+    walletStore.setTransactions(
+      updatedArray,
+      page,
+      updatedArray?.length < res.total
+    );
+    walletStore.setTransactionsIsLoading(false);
+    if (page > 1) {
+      walletStore.setNewPageIsLoading(false);
+    }
   } catch (error: any) {
-    console.log(error);
-    input.walletStore.setisLoading(false);
+    input.walletStore.setNewPageIsLoading(false);
+    input.walletStore.setTransactionsIsLoading(false);
     toast.error(error?.message || "Something Went Wrong!");
   }
 };

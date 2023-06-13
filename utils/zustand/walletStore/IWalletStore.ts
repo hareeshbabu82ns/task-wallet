@@ -4,9 +4,10 @@ export type IWallteStore = {
   debit: number | null;
   realm: string | null;
   isLoading: boolean;
+  newPageIsLoading: boolean;
   id: string | null;
-  filters?: { [key: string]: string } | null;
   transactions: ITransaction[] | null;
+  hasMore: boolean | null;
   setBalance: (
     balance: number,
     credit: number,
@@ -14,8 +15,16 @@ export type IWallteStore = {
     realm: string,
     id: string | null
   ) => void;
-  setTransactions: (transactions: ITransaction[] | null) => void;
+  setTransactions: (
+    transactions: ITransaction[] | null,
+    page: number | null,
+    hasMore: boolean | null
+  ) => void;
   setisLoading: (isLoading: boolean) => void;
+  transactionsIsLoading: boolean;
+  setTransactionsIsLoading: (transactionsIsLoading: boolean) => void;
+  setNewPageIsLoading: (newPageIsLoading: boolean) => void;
+  page: number | null;
 };
 
 export type ITransaction = {
