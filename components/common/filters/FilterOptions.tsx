@@ -30,7 +30,7 @@ const FilterOptions = <T,>(props: Props<T>) => {
         <Listbox.Button
           onFocus={onFocus}
           onBlur={onBlur}
-          className={`relative z-10 flex w-full min-w-[9rem] max-w-[9rem] items-center rounded-lg bg-bg-primary px-3 py-1.5 shadow-shadow-form-input outline-1 outline-offset-2 focus:!outline-blue-700`}
+          className={`relative z-40 flex w-full min-w-[9rem] max-w-[9rem] items-center rounded-lg bg-bg-primary px-3 py-1.5 shadow-shadow-form-input outline-1 outline-offset-2 focus:!outline-blue-700`}
         >
           <span className="max-w-[94%] overflow-hidden text-ellipsis text-sm whitespace-nowrap">
             {(typeof value === "string" &&
@@ -51,7 +51,7 @@ const FilterOptions = <T,>(props: Props<T>) => {
           leaveFrom="opacity-100"
           leaveTo="opacity-0"
         >
-          <Listbox.Options className="absolute top-[100%] min-w-[9rem] max-w-[9rem] z-[200] mt-1 max-h-60 w-full overflow-auto rounded-md bg-bg-primary-light text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+          <Listbox.Options className="absolute z-30 top-[100%] min-w-[9rem] max-w-[9rem] mt-1 max-h-60 w-full overflow-auto rounded-md bg-bg-primary-light text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
             {options.map((option, optionIdx) => (
               <Listbox.Option
                 key={optionIdx}

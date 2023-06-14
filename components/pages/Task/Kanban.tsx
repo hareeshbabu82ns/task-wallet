@@ -137,7 +137,7 @@ const TasksColumn: React.FC<{
           ref={droppableProvided.innerRef}
           {...droppableProvided.droppableProps}
         >
-          <div className="w-full z-30 border-b border-border-primary mb-6 sticky top-0 left-0 bg-bg-primary shadow-shadow-form-input px-8 py-3 flex items-center justify-between">
+          <div className="w-full z-10 border-b border-border-primary mb-6 sticky top-0 left-0 bg-bg-primary shadow-shadow-form-input px-8 py-3 flex items-center justify-between">
             <div className="flex gap-3 items-center">
               <span className="text-lg">{props.heading}</span>
               {props.icon}

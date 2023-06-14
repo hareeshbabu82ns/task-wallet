@@ -1,3 +1,4 @@
+import withAuth from "@/components/auth/withAuth";
 import Kanban from "@/components/pages/Task/Kanban";
 import NewTaskModal from "@/components/pages/Task/NewTaskModal";
 import TaskPageHeader from "@/components/pages/Task/TaskPageHeader";
@@ -38,4 +39,4 @@ const TasksPage = () => {
   );
 };
 
-export default TasksPage;
+export default withAuth(TasksPage);

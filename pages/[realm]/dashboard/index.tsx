@@ -1,3 +1,4 @@
+import withAuth from "@/components/auth/withAuth";
 import WalletAnalytics from "@/components/pages/Dashboard/WalletAnalytics";
 import { useAuthStore } from "@/utils/zustand/authStore/useAuthStore";
 import {
@@ -16,4 +17,4 @@ const DashboardPage = () => {
   );
 };
 
-export default DashboardPage;
+export default withAuth(DashboardPage);

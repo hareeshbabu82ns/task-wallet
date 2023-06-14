@@ -6,7 +6,11 @@ import { Draggable } from "react-beautiful-dnd";
 import * as Popover from "@radix-ui/react-popover";
 import { RxMixerHorizontal } from "react-icons/rx";
 import { GiCrossMark } from "react-icons/gi";
-import { BsThreeDots, BsThreeDotsVertical } from "react-icons/bs";
+import {
+  BsClockHistory,
+  BsThreeDots,
+  BsThreeDotsVertical,
+} from "react-icons/bs";
 
 interface ComponetProps {
   task: ITask;
@@ -19,6 +23,8 @@ const TaskCard = forwardRef<HTMLDivElement, ComponetProps>(
       task.description.length >= 70
         ? task.description.slice(0, 70) + "..."
         : task.description;
+
+    console.log(task);
 
     return (
       <div ref={ref}>
@@ -42,15 +48,15 @@ const TaskCard = forwardRef<HTMLDivElement, ComponetProps>(
                   </Popover.Trigger>
                   <Popover.Portal>
                     <Popover.Content
-                      className="rounded p-2 w-[160px] bg-bg-primary-light shadow-[0_10px_38px_-10px_hsla(206,22%,7%,.35),0_10px_20px_-15px_hsla(206,22%,7%,.2)] focus:shadow-[0_10px_38px_-10px_hsla(206,22%,7%,.35),0_10px_20px_-15px_hsla(206,22%,7%,.2),0_0_0_2px_theme(colors.violet7)] will-change-[transform,opacity] data-[state=open]:data-[side=top]:animate-slideDownAndFade data-[state=open]:data-[side=right]:animate-slideLeftAndFade data-[state=open]:data-[side=bottom]:animate-slideUpAndFade data-[state=open]:data-[side=left]:animate-slideRightAndFade"
+                      className="rounded p-2 w-[160px] bg-bg-primary-light first-of-type-[]"
                       sideOffset={5}
                     >
-                      {/* <Popover.Close
-                      className="rounded-full h-[25px] w-[25px] inline-flex items-center justify-center text-violet11 absolute top-[5px] right-[5px] hover:bg-violet4 focus:shadow-[0_0_0_2px] focus:shadow-violet7 outline-none cursor-default"
-                      aria-label="Close"
-                    >
-                      <GiCrossMark />
-                    </Popover.Close> */}
+                      <span className="w-full cursor-pointer block px-1.5 transition-all rounded-md text-text-primary hover:bg-bg-primary">
+                        View Details
+                      </span>
+                      <span className="w-full cursor-pointer block px-1.5 transition-all rounded-md text-text-primary hover:bg-bg-primary">
+                        Delete
+                      </span>
                       <Popover.Arrow className="fill-white" />
                     </Popover.Content>
                   </Popover.Portal>
@@ -65,7 +71,7 @@ const TaskCard = forwardRef<HTMLDivElement, ComponetProps>(
                   {task.priority.charAt(0).toUpperCase() +
                     task.priority.slice(1)}
                 </span>
-                <div className="flex flex-col gap-1.5">
+                <div className="flex flex-col gap-1">
                   <span className="font-medium">{task.title}</span>
                   <span className="text-text-secondary text-sm">
                     {clippedText}
@@ -93,8 +99,9 @@ const TaskCard = forwardRef<HTMLDivElement, ComponetProps>(
                   {dayjs(task.$createdAt).format("D MMMM YYYY")}
                 </span>
                 {task.dueDate && (
-                  <span className="text-xs">
-                    Due date {dayjs(task.dueDate).format("D MMMM YYYY")}
+                  <span className="text-xs flex items-center gap-1.5">
+                    <BsClockHistory />{" "}
+                    {dayjs(task.dueDate).format("D MMMM YYYY")}
                   </span>
                 )}
               </div>

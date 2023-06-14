@@ -13,7 +13,7 @@ import { RxDashboard } from "react-icons/rx";
 
 const Sidebar = () => {
   return (
-    <aside className="w-fit sticky left-0 top-0 max-[900px]:w-full min-h-full max-[900px]:min-h-fit bg-bg-primary z-50 max-[900px]:shadow-shadow-primary-sm max-[900px]:pt-0 left-0 max-[900px]:fixed max-[900px]:bottom-0 max-[900px]:h-fit max-[900px]:left-0 max-[900px]:pb-0 border-r-border-primary border-r py-5 max-[900px]:py-0">
+    <aside className="w-fit sticky top-0 max-[900px]:w-full max-[900px]:top-auto min-h-full max-[900px]:min-h-fit bg-bg-primary z-50 max-[900px]:shadow-shadow-primary-sm max-[900px]:pt-0 left-0 max-[900px]:fixed max-[900px]:bottom-0 max-[900px]:h-fit max-[900px]:left-0 max-[900px]:pb-0 border-r-border-primary border-r py-5 max-[900px]:py-0">
       <Routes />
     </aside>
   );
@@ -38,7 +38,7 @@ const Routes = () => {
   const router = useRouter();
 
   return (
-    <div className="w-full pb-6 pt-2 bg-bg-primary max-[900px]:z-20  max-[900px]:pb-0 max-[900px]:pt-0">
+    <div className="w-full pb-6 pt-2 bg-bg-primary max-[900px]:z-50  max-[900px]:pb-0 max-[900px]:pt-0">
       <ul className="flex flex-col justify-evenly gap-3 w-full  bg-bg-primary max-[900px]:flex-row">
         {currentRealm &&
           tabs.map((item) => (

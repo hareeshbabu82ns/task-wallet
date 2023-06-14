@@ -1,10 +1,26 @@
 import Image from "next/image";
 import { Inter } from "next/font/google";
 import ButtonPrimary from "@/components/common/buttons/ButtonPrimary";
+import { useRouter } from "next/router";
+import { useAuthStore } from "@/utils/zustand/authStore/useAuthStore";
+import { useRealmStore } from "@/utils/zustand/realm/useRealmStore";
+import { useEffect } from "react";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export default function Home() {
+  const router = useRouter();
+
+  const { loggedIn } = useAuthStore((s) => s);
+
+  const { currentRealm } = useRealmStore((s) => s);
+
+  useEffect(() => {
+    if (loggedIn && currentRealm) {
+      router.push(`/${currentRealm.name}/dashboard`);
+    }
+  }, [loggedIn, currentRealm]);
+
   return (
     <div className="flex grow h-full w-full items-center max-w-3xl mx-auto mt-20 gap-8 text-center flex-col">
       <h1 className="bg-gradient-to-b font-semibold from-primary text-5xl leading-[4rem] to-secondary bg-clip-text text-transparent ">

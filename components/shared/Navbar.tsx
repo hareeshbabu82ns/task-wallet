@@ -13,7 +13,7 @@ const Navbar = () => {
   const { loggedIn } = authStore;
 
   return (
-    <nav className="w-full p-4 px-6 h-16 gap-5 border-b border-[#343a40] flex items-center">
+    <nav className="w-full p-4 px-6 h-16 relative z-40 gap-5 border-b border-[#343a40] flex items-center">
       <Link href={"/"} className="cursor-pointer">
         <h2 className="text-xl font-semibold bg-gradient-to-b from-primary to-secondary bg-clip-text text-transparent">
           <span className="mt-6 pb-10">Task-</span>

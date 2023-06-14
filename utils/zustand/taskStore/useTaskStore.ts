@@ -53,6 +53,7 @@ export const createTask = async (input: {
       setIsLoading,
       onSuccess,
       taskStore,
+      dueDate,
     } = input;
 
     setIsLoading(true);
@@ -91,6 +92,7 @@ export const createTask = async (input: {
         keywords: `${title}`,
         images: imagesUrl,
         index: (taskStore[status]?.totalLength || 0) + 1,
+        dueDate: dueDate || null,
       }
     );
 

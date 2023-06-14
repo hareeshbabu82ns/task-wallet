@@ -1,7 +1,8 @@
+import withAuth from "@/components/auth/withAuth";
 import React from "react";
 
-const TimePage = () => {
-  return <div>TimePage</div>;
+const Settings = () => {
+  return <div className="p-[min(3vh,3vw)] py-[min(2vh,2vw)]">Settings</div>;
 };
 
-export default TimePage;
+export default withAuth(Settings);

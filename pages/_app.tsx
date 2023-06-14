@@ -9,6 +9,7 @@ const inter = Inter({ subsets: ["latin"] });
 import "react-toastify/dist/ReactToastify.css";
 import { getUser, useAuthStore } from "@/utils/zustand/authStore/useAuthStore";
 import Sidebar from "@/components/shared/Sidebar/Sidebar";
+import { useRealmStore } from "@/utils/zustand/realm/useRealmStore";
 
 export default function App({ Component, pageProps }: AppProps) {
   const router = useRouter();
@@ -16,6 +17,16 @@ export default function App({ Component, pageProps }: AppProps) {
   const [showSideBar, setShowSidebar] = useState(false);
 
   const authStore = useAuthStore((s) => s);
+
+  const { loggedIn } = authStore;
+
+  const { currentRealm } = useRealmStore((s) => s);
+
+  useEffect(() => {
+    if (authStore.loggedIn && currentRealm) {
+      router.push(`/${currentRealm.name}/dashboard`);
+    }
+  }, [loggedIn, currentRealm]);
 
   useEffect(() => {
     if (pagesWithoutSidebar.includes(router.pathname)) {
@@ -42,7 +53,7 @@ export default function App({ Component, pageProps }: AppProps) {
             {/* <SecondaryNavbar />  */}
 
             <Sidebar />
-            <div className="w-full flex grow flex-col h-fit max-lg:w-fit max-[900px]:pb-20">
+            <div className="w-full flex grow flex-col h-full max-lg:w-fit max-[900px]:pb-20 max-[900px]:h-fit">
               <Component {...pageProps} />
             </div>
           </div>

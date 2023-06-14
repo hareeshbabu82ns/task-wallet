@@ -13,6 +13,7 @@ import { IoIosAdd } from "react-icons/io";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import { useInView } from "react-intersection-observer";
+import withAuth from "@/components/auth/withAuth";
 
 const WalletPage = () => {
   const [newTransactionModal, setNewTransactionModal] = useState(false);
@@ -138,7 +139,7 @@ const WalletPage = () => {
   );
 };
 
-export default WalletPage;
+export default withAuth(WalletPage);
 
 const TransactionsSkeleton = () => {
   return (

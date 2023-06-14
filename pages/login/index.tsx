@@ -28,11 +28,6 @@ const SignIn = () => {
     }
     loginUser(emailInput.value, passwordInput.value, authStore);
   };
-
-  useEffect(() => {
-    if (loggedIn) router.push("/");
-  }, [loggedIn]);
-
   return (
     <div className="flex items-center h-full">
       <div className="mx-auto w-fit min-w-[40vh] rounded-xl bg-bg-primary px-8 py-12 shadow-shadow-primary-sm">

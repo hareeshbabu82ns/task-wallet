@@ -68,7 +68,7 @@ const TaskPageHeader: React.FC<{
   }, [taskPriorityInput.value, keyword]);
 
   return (
-    <div className="w-full justify-end gap-4 sticky top-0 left-0 inset-0 flex items-center">
+    <div className="w-full justify-end gap-4 top-0 left-0 z-30 inset-0 flex items-center">
       <h2 className="mb-2 px-2 text-xl font-medium mr-auto">Tasks</h2>
       <div className="flex flex-col gap-2">
         <div className="relative">
