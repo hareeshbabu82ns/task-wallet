@@ -29,8 +29,6 @@ const WalletAnalytics = () => {
 
   const dashboardStore = useDashboardStore();
 
-  const modifiedData = useState<null>(null);
-
   useEffect(() => {
     if (user && currentRealm) {
       getWalletData({

@@ -20,7 +20,7 @@ const TransactionCard = forwardRef<HTMLDivElement, ComponetProps>(
     return (
       <div
         ref={ref || null}
-        className="w-full p-2 px-8 rounded-2xl shadow-shadow-primary-xsm gap-8 flex justify-between items-center"
+        className="w-full p-2 px-8 rounded-2xl flex-wrap shadow-shadow-primary-xsm gap-8 flex justify-between items-center"
       >
         <div className="flex flex-col gap-1">
           <div className="flex items-center gap-4">

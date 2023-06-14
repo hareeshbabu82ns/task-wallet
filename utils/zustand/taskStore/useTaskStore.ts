@@ -245,14 +245,13 @@ export const getTasks = async (input: {
   try {
     const { realm, userId, taskStore, filters, status, setIsLoading } = input;
 
-    console.log(filters);
     setIsLoading(true);
     const getQueryList = (status: string) => {
       return [
         Query.equal("userId", userId),
         Query.equal("realm", realm),
         Query.equal("status", status),
-        Query.limit(20),
+        Query.limit(15),
         // Query.orderAsc("$id"),
         Query.orderAsc("index"),
         Query.orderDesc("$updatedAt"),
@@ -279,6 +278,7 @@ export const getTasks = async (input: {
       tasks: res.documents as ITask[],
       hasMore: res.total > res.documents.length,
       totalLength: res.documents.length,
+      page: 1,
     };
 
     const setTasksFunction =
@@ -287,6 +287,79 @@ export const getTasks = async (input: {
       (status === "completed" && taskStore.setCompleted);
 
     if (setTasksFunction) setTasksFunction(taskList);
+    setIsLoading(false);
+  } catch (error: any) {
+    input.setIsLoading(false);
+    toast.error(error?.message || "Something Went Wrong!");
+  }
+};
+
+export const getNewPageTasks = async (input: {
+  taskStore: ITaskStore;
+  userId: string;
+  realm: string;
+  status: string;
+  page: number;
+  setIsLoading: Dispatch<SetStateAction<boolean>>;
+  filters?: {
+    priority?: string;
+    keyword?: string;
+    date?: string;
+  };
+}) => {
+  try {
+    const { realm, userId, taskStore, filters, status, setIsLoading, page } =
+      input;
+
+    setIsLoading(true);
+    const getQueryList = (status: string) => {
+      return [
+        Query.equal("userId", userId),
+        Query.equal("realm", realm),
+        Query.equal("status", status),
+        Query.limit(6),
+        // Query.orderAsc("$id"),
+        Query.orderAsc("index"),
+        Query.orderDesc("$updatedAt"),
+        Query.offset((page - 1) * 15),
+      ];
+    };
+
+    const queries = getQueryList(status);
+
+    if (filters?.priority) {
+      queries.push(Query.equal("priority", filters.priority));
+    }
+
+    if (filters?.keyword) {
+      queries.push(Query.search("keywords", filters.keyword));
+    }
+
+    const res: any = await database.listDocuments(
+      process.env.NEXT_PUBLIC_DATABASE_ID || "",
+      process.env.NEXT_PUBLIC_TASKS_COLLECTION_ID || "",
+      queries
+    );
+
+    const updatedTasks = [
+      ...(taskStore[status as ETaskStatuses]?.tasks || []),
+      ...res.documents,
+    ];
+
+    const taskList: ITaskListInfo = {
+      tasks: updatedTasks as ITask[],
+      hasMore: updatedTasks > res.documents.length,
+      totalLength: updatedTasks.length,
+      page,
+    };
+
+    const setTasksFunction =
+      (status === "in-progress" && taskStore.setInProgress) ||
+      (status === "todo" && taskStore.setTodo) ||
+      (status === "completed" && taskStore.setCompleted);
+
+    if (setTasksFunction) setTasksFunction(taskList);
+    console.log(taskList);
     setIsLoading(false);
   } catch (error: any) {
     input.setIsLoading(false);

@@ -21,7 +21,7 @@ const TasksPage = () => {
   const [filters, setFilters] = useState<TaskFilters | null>(null);
 
   return (
-    <div className="p-10 py-6 relative flex flex-col gap-10 h-full">
+    <div className="p-[min(3vh,3vw)] py-[min(2vh,2vw)] h-full relative flex flex-col grow overflow-auto gap-[min(3vh,3vw)] max-[900px]:h-fit">
       <button
         onClick={() => setNewTransactionModal(true)}
         className="p-1 bg-gradient-to-b z-10 from-primary to-secondary justify-center flex items-center gap-2 fixed rounded-full right-[4rem] bottom-[4rem]"

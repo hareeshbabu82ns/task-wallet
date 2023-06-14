@@ -150,7 +150,7 @@ const NewTaskModal: React.FC<{
   return (
     <>
       <Transition appear show={props.open} as={Fragment}>
-        <Dialog as="div" className="relative z-10 w-full" onClose={closeModal}>
+        <Dialog as="div" className="relative z-50 w-full" onClose={closeModal}>
           <Transition.Child
             as={Fragment}
             enter="ease-out duration-300"

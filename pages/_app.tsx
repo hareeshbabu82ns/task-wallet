@@ -38,11 +38,11 @@ export default function App({ Component, pageProps }: AppProps) {
         <Navbar />
 
         <div className="flex relative w-full min-h-full grow">
-          <div className="grow flex  max-[900px]:flex-col-reverse overflow-scroll relative">
+          <div className="grow flex  max-[900px]:flex-col-reverse min-h-full overflow-auto relative">
             {/* <SecondaryNavbar />  */}
 
             <Sidebar />
-            <div className="grow w-full flex flex-col">
+            <div className="w-full flex grow flex-col h-fit max-lg:w-fit max-[900px]:pb-20">
               <Component {...pageProps} />
             </div>
           </div>

@@ -24,6 +24,7 @@ export type ITaskListInfo = {
   tasks: ITask[] | null;
   hasMore: boolean;
   totalLength: number | null;
+  page: number | null;
 };
 
 export type ITask = {
