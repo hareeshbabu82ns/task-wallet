@@ -12,26 +12,18 @@ export enum ETaskPriorities {
 }
 
 export type ITaskStore = {
-  tasks: ITaskList | null;
-  setTasks: (allTasks: ITaskList) => void;
+  todo: ITaskListInfo | null;
+  setTodo: (todo: ITaskListInfo) => void;
+  "in-progress": ITaskListInfo | null;
+  setInProgress: (inProgress: ITaskListInfo) => void;
+  completed: ITaskListInfo | null;
+  setCompleted: (completed: ITaskListInfo) => void;
 };
 
-export type ITaskList = {
-  todo: {
-    tasks: ITask[] | null;
-    tasksIsLoading: boolean;
-    totalLength: number | null;
-  };
-  "in-progress": {
-    tasks: ITask[] | null;
-    tasksIsLoading: boolean;
-    totalLength: number | null;
-  };
-  completed: {
-    tasks: ITask[] | null;
-    tasksIsLoading: boolean;
-    totalLength: number | null;
-  };
+export type ITaskListInfo = {
+  tasks: ITask[] | null;
+  hasMore: boolean;
+  totalLength: number | null;
 };
 
 export type ITask = {

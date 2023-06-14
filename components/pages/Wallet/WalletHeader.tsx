@@ -147,7 +147,7 @@ const WalletHeader: React.FC<{
         <div className="relative">
           <input
             onChange={handleInputChange}
-            className="min-w-[18rem] grow w-full text-sm pl-12 autofill:!text-red-200 outline-1 outline-offset-2 focus:outline-none bg-bg-primary shadow-shadow-form-input rounded-md py-1.5"
+            className="min-w-[18rem] grow w-full text-sm pl-12 autofill:!text-red-200 outline-1 outline-offset-2 focus:outline-none bg-bg-primary shadow-shadow-form-input rounded-lg py-1.5"
           />
           <IoIcons.IoSearch className="absolute top-1/2 -translate-y-1/2 left-4 min-w-5 min-h-5" />
         </div>

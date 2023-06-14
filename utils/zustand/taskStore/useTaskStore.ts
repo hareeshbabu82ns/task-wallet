@@ -1,8 +1,9 @@
 import { create } from "zustand";
 import { Client, ID, Databases, Query, Storage } from "appwrite";
 import { toast } from "react-toastify";
-import { ETaskStatuses, ITaskList, ITaskStore } from "./ITaskStore";
+import { ETaskStatuses, ITaskStore, ITask, ITaskListInfo } from "./ITaskStore";
 import { DropResult } from "react-beautiful-dnd";
+import { Dispatch, SetStateAction } from "react";
 
 const client = new Client();
 const database = new Databases(client);
@@ -13,9 +14,17 @@ client
   .setProject("647dc841ab72fff2362b"); // Your project ID
 
 export const useTasksStore = create<ITaskStore>((set) => ({
-  tasks: null,
-  setTasks: (tasks) => {
-    set({ tasks });
+  todo: null,
+  setTodo: (todo) => {
+    set({ todo });
+  },
+  "in-progress": null,
+  setInProgress: (inProgress) => {
+    set({ "in-progress": inProgress });
+  },
+  completed: null,
+  setCompleted: (completed) => {
+    set({ completed });
   },
 }));
 
@@ -65,8 +74,8 @@ export const createTask = async (input: {
       );
     }
 
-    if (taskStore.tasks)
-      console.log(taskStore?.tasks, taskStore?.tasks[status]?.totalLength);
+    // if (taskStore[status])
+    //   console.log(taskStore?.tasks, taskStore?.tasks[status]?.totalLength);
 
     const res: any = await database.createDocument(
       process.env.NEXT_PUBLIC_DATABASE_ID || "",
@@ -81,21 +90,22 @@ export const createTask = async (input: {
         description: description,
         keywords: `${title}`,
         images: imagesUrl,
-        index:
-          taskStore?.tasks && taskStore?.tasks[status]?.totalLength
-            ? taskStore?.tasks[status]?.totalLength! + 1
-            : 1,
+        index: (taskStore[status]?.totalLength || 0) + 1,
       }
     );
 
     // if( taskStore?.tasks && taskStore?.tasks[status]){
 
-    if (taskStore.tasks) {
-      const updatedTasks = Object.assign(taskStore?.tasks, {});
+    if (taskStore[status]) {
+      const updateTaskFunction =
+        (status === "in-progress" && taskStore.setInProgress) ||
+        (status === "todo" && taskStore.setTodo);
+      status === "completed" && taskStore.setCompleted;
 
-      updatedTasks[status].tasks = [res, ...(updatedTasks[status].tasks || [])];
+      const updatedTasks: ITaskListInfo = Object.assign(taskStore[status]!, {});
+      updatedTasks.tasks = [res, ...updatedTasks.tasks!];
 
-      taskStore.setTasks(updatedTasks);
+      if (updateTaskFunction) updateTaskFunction(updatedTasks);
     }
 
     setIsLoading(false);
@@ -106,97 +116,39 @@ export const createTask = async (input: {
   }
 };
 
-export const getTasks = async (input: {
-  taskStore: ITaskStore;
-  userId: string;
-  realm: string;
-}) => {
-  try {
-    const { realm, userId, taskStore } = input;
-
-    const todoTasks = await database.listDocuments(
-      process.env.NEXT_PUBLIC_DATABASE_ID || "",
-      process.env.NEXT_PUBLIC_TASKS_COLLECTION_ID || "",
-      [
-        Query.equal("userId", userId),
-        Query.equal("realm", realm),
-        Query.equal("status", ETaskStatuses.todo),
-        Query.limit(20),
-        // Query.orderAsc("$id"),
-        Query.orderAsc("index"),
-        Query.orderDesc("$updatedAt"),
-
-        // FILTERS
-      ]
-    );
-
-    const inProgressTasks = await database.listDocuments(
-      process.env.NEXT_PUBLIC_DATABASE_ID || "",
-      process.env.NEXT_PUBLIC_TASKS_COLLECTION_ID || "",
-      [
-        Query.equal("userId", userId),
-        Query.equal("realm", realm),
-        Query.equal("status", ETaskStatuses["in-progress"]),
-        Query.limit(20),
-        // Query.orderAsc("$id"),
-        Query.orderAsc("index"),
-        Query.orderDesc("$updatedAt"),
-      ]
-    );
-
-    const completedTasks = await database.listDocuments(
-      process.env.NEXT_PUBLIC_DATABASE_ID || "",
-      process.env.NEXT_PUBLIC_TASKS_COLLECTION_ID || "",
-      [
-        Query.equal("userId", userId),
-        Query.equal("realm", realm),
-        Query.equal("status", ETaskStatuses.completed),
-        Query.limit(20),
-        // Query.orderAsc("$id"),
-        Query.orderAsc("index"),
-        Query.orderDesc("$updatedAt"),
-      ]
-    );
-
-    const tasks: ITaskList = {
-      todo: {
-        tasks: todoTasks.documents as any,
-        tasksIsLoading: false,
-        totalLength: todoTasks.total,
-      },
-      "in-progress": {
-        tasks: inProgressTasks.documents as any,
-        tasksIsLoading: false,
-        totalLength: inProgressTasks.total,
-      },
-      completed: {
-        tasks: completedTasks.documents as any,
-        tasksIsLoading: false,
-        totalLength: completedTasks.total,
-      },
-    };
-
-    taskStore.setTasks(tasks);
-  } catch (error: any) {
-    toast.error(error?.message || "Something Went Wrong!");
-  }
-};
-
 export const hanldeDragDrop = async (input: {
   taskStore: ITaskStore;
   result: DropResult;
 }) => {
   try {
-    const {
-      result,
-      taskStore: { tasks, setTasks },
-    } = input;
+    const { result, taskStore } = input;
 
     console.log(result);
 
-    if (!result.destination?.droppableId || !tasks) return;
+    if (!result.destination?.droppableId) return;
 
-    const tasksCopy = Object.assign(tasks, {});
+    const sourceTasksColumn = Object.assign(
+      taskStore[result.source.droppableId as ETaskStatuses]!,
+      {}
+    );
+
+    const setSourceTasksFunction =
+      (result.source.droppableId === "in-progress" &&
+        taskStore.setInProgress) ||
+      (result.source.droppableId === "todo" && taskStore.setTodo) ||
+      (result.source.droppableId === "completed" && taskStore.setCompleted);
+
+    const destinationTasksColumn = Object.assign(
+      taskStore[result.destination.droppableId as ETaskStatuses]!,
+      {}
+    );
+
+    const setDestinationTasksFunction =
+      (result.destination.droppableId === "in-progress" &&
+        taskStore.setInProgress) ||
+      (result.destination.droppableId === "todo" && taskStore.setTodo) ||
+      (result.destination.droppableId === "completed" &&
+        taskStore.setCompleted);
 
     if (
       result.source.droppableId === result.destination.droppableId &&
@@ -206,20 +158,24 @@ export const hanldeDragDrop = async (input: {
 
     if (
       result.source.droppableId === result.destination.droppableId &&
-      tasksCopy[result.source.droppableId as ETaskStatuses]
+      taskStore[result.source.droppableId as ETaskStatuses] &&
+      sourceTasksColumn &&
+      destinationTasksColumn
     ) {
-      const removedElements = tasksCopy[
-        result.source.droppableId as ETaskStatuses
-      ]?.tasks?.splice(result.source.index, 1);
+      const removedElements = sourceTasksColumn.tasks?.splice(
+        result.source.index,
+        1
+      );
 
       // Insert the element at the desired position
       if (removedElements)
-        tasksCopy[result.source.droppableId as ETaskStatuses]?.tasks?.splice(
+        destinationTasksColumn.tasks?.splice(
           result.destination.index,
           0,
           removedElements[0]
         );
-      setTasks(tasksCopy);
+      if (setDestinationTasksFunction)
+        setDestinationTasksFunction(destinationTasksColumn);
       await database.updateDocument(
         process.env.NEXT_PUBLIC_DATABASE_ID || "",
         process.env.NEXT_PUBLIC_TASKS_COLLECTION_ID || "",
@@ -232,26 +188,30 @@ export const hanldeDragDrop = async (input: {
 
     if (
       result.source.droppableId !== result.destination.droppableId &&
-      tasksCopy[result.source.droppableId as ETaskStatuses] &&
-      tasksCopy[result.destination.droppableId as ETaskStatuses]
+      sourceTasksColumn &&
+      destinationTasksColumn
     ) {
-      const removedElements = tasksCopy[
-        result.source.droppableId as ETaskStatuses
-      ]?.tasks?.splice(result.source.index, 1);
+      const removedElements = sourceTasksColumn.tasks?.splice(
+        result.source.index,
+        1
+      );
 
-      tasksCopy[result.source.droppableId as ETaskStatuses].totalLength =
-        tasksCopy[result.source.droppableId as ETaskStatuses].totalLength! - 1;
+      sourceTasksColumn.totalLength = sourceTasksColumn.totalLength! - 1;
 
-      tasksCopy[result.destination.droppableId as ETaskStatuses].totalLength =
-        tasksCopy[result.destination.droppableId as ETaskStatuses]
-          .totalLength! + 1;
+      destinationTasksColumn.totalLength =
+        destinationTasksColumn.totalLength! + 1;
 
       // Insert the element at the desired position
       if (removedElements)
-        tasksCopy[
-          result.destination.droppableId as ETaskStatuses
-        ]?.tasks?.splice(result.destination.index, 0, removedElements[0]);
-      setTasks(tasksCopy);
+        destinationTasksColumn.tasks?.splice(
+          result.destination.index,
+          0,
+          removedElements[0]
+        );
+
+      if (setDestinationTasksFunction)
+        setDestinationTasksFunction(destinationTasksColumn);
+
       await database.updateDocument(
         process.env.NEXT_PUBLIC_DATABASE_ID || "",
         process.env.NEXT_PUBLIC_TASKS_COLLECTION_ID || "",
@@ -264,6 +224,72 @@ export const hanldeDragDrop = async (input: {
     }
   } catch (error: any) {
     // input.setIsLoading(false);
+    toast.error(error?.message || "Something Went Wrong!");
+  }
+};
+
+// TEST
+
+export const getTasks = async (input: {
+  taskStore: ITaskStore;
+  userId: string;
+  realm: string;
+  status: string;
+  setIsLoading: Dispatch<SetStateAction<boolean>>;
+  filters?: {
+    priority?: string;
+    keyword?: string;
+    date?: string;
+  };
+}) => {
+  try {
+    const { realm, userId, taskStore, filters, status, setIsLoading } = input;
+
+    console.log(filters);
+    setIsLoading(true);
+    const getQueryList = (status: string) => {
+      return [
+        Query.equal("userId", userId),
+        Query.equal("realm", realm),
+        Query.equal("status", status),
+        Query.limit(20),
+        // Query.orderAsc("$id"),
+        Query.orderAsc("index"),
+        Query.orderDesc("$updatedAt"),
+      ];
+    };
+
+    const queries = getQueryList(status);
+
+    if (filters?.priority) {
+      queries.push(Query.equal("priority", filters.priority));
+    }
+
+    if (filters?.keyword) {
+      queries.push(Query.search("keywords", filters.keyword));
+    }
+
+    const res: any = await database.listDocuments(
+      process.env.NEXT_PUBLIC_DATABASE_ID || "",
+      process.env.NEXT_PUBLIC_TASKS_COLLECTION_ID || "",
+      queries
+    );
+
+    const taskList: ITaskListInfo = {
+      tasks: res.documents as ITask[],
+      hasMore: res.total > res.documents.length,
+      totalLength: res.documents.length,
+    };
+
+    const setTasksFunction =
+      (status === "in-progress" && taskStore.setInProgress) ||
+      (status === "todo" && taskStore.setTodo) ||
+      (status === "completed" && taskStore.setCompleted);
+
+    if (setTasksFunction) setTasksFunction(taskList);
+    setIsLoading(false);
+  } catch (error: any) {
+    input.setIsLoading(false);
     toast.error(error?.message || "Something Went Wrong!");
   }
 };
