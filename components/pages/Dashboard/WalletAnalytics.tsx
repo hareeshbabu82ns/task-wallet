@@ -50,10 +50,12 @@ const WalletAnalytics = () => {
       setChartWidth(window.innerWidth * 0.4); // Adjust the width based on the container's size
     };
 
-    window.addEventListener("resize", handleResize); // Listen for window resize events
-    return () => {
-      window.removeEventListener("resize", handleResize); // Clean up the event listener
-    };
+    if (window) {
+      window.addEventListener("resize", handleResize); // Listen for window resize events
+      return () => {
+        window.removeEventListener("resize", handleResize); // Clean up the event listener
+      };
+    }
   }, []);
   return (
     <>
