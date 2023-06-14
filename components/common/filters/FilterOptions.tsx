@@ -4,12 +4,10 @@ import { RxChevronDown } from "react-icons/rx";
 import { FaCheck } from "react-icons/fa";
 
 type Props<T> = {
-  hasError: boolean;
   onChange: (val: T) => void;
   onBlur: () => void;
   value: T;
   onFocus: () => void;
-  error: boolean;
   options: { name: string }[];
   multiple: boolean;
   label: string;
@@ -17,18 +15,7 @@ type Props<T> = {
 };
 
 const FilterOptions = <T,>(props: Props<T>) => {
-  const {
-    onChange,
-    onBlur,
-    value,
-    onFocus,
-    labelColor,
-    error,
-    options,
-    multiple,
-  } = props;
-
-  const labelModifier = labelColor ? labelColor : "currentColor";
+  const { onChange, onBlur, value, onFocus, options, multiple } = props;
 
   return (
     <Listbox

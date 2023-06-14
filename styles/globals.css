@@ -99,3 +99,11 @@ body {
 .css-hlj6pa-MuiDialogActions-root {
   display: none !important;
 }
+
+.recharts-cartesian-grid-vertical line {
+  stroke: #555 !important;
+}
+
+.recharts-cartesian-grid-horizontal line {
+  stroke: #555 !important;
+}

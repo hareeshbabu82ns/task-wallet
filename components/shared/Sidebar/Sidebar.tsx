@@ -9,6 +9,7 @@ import Link from "next/link";
 import { useRealmStore } from "@/utils/zustand/realm/useRealmStore";
 import { useRouter } from "next/router";
 import { motion } from "framer-motion";
+import { RxDashboard } from "react-icons/rx";
 
 const Sidebar = () => {
   return (
@@ -25,6 +26,7 @@ export default Sidebar;
 
 const tabs = [
   // { icon: <RxIcons.RxDashboard />, label: "Dashboard" },
+  { icon: <RxDashboard className="w-6 h-6" />, label: "Dashboard" },
   { icon: <TfiIcons.TfiWallet className="w-6 h-6" />, label: "Wallet" },
   { icon: <CiIcons.CiCircleList className="w-7 h-7" />, label: "Tasks" },
   { icon: <AiIcons.AiOutlineSetting className="w-6 h-6" />, label: "Settings" },
