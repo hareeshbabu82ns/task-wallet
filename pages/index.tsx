@@ -7,7 +7,7 @@ import { useRealmStore } from "@/utils/zustand/realm/useRealmStore";
 import { useEffect } from "react";
 import { ComboboxList } from "@/components/common/combobox/Combobox";
 import Link from "next/link";
-
+import { motion } from "framer-motion";
 const inter = Inter({ subsets: ["latin"] });
 
 export default function Home() {
@@ -22,6 +22,17 @@ export default function Home() {
       router.push(`/${currentRealm.name}/dashboard`);
     }
   }, [loggedIn, currentRealm]);
+
+  const itemVarient2 = {
+    open: {
+      scale: 1,
+      opacity: 1,
+    },
+    closed: {
+      scale: 0,
+      opacity: 0,
+    },
+  };
 
   return (
     <>
@@ -59,6 +70,33 @@ export default function Home() {
               Sign-Up
             </Link>{" "}
           </div>
+          <motion.div
+            variants={itemVarient2}
+            transition={{ duration: 0.5 }}
+            className="bg-red relative mt-4 h-[max(20vh,11vw)] w-[max(40vh,25vw)] max-md:mb-52 max-sm:h-[min(25vh,30vw)] max-sm:w-[70%]"
+          >
+            <Image
+              src={"/tw-wallet.png"}
+              width={200}
+              height={400}
+              alt="project screenshot"
+              className="absolute -left-[52%] top-0 h-full w-full rounded-2xl shadow-xl transition-all hover:z-20 hover:scale-110 max-md:-left-[25%]"
+            />
+            <Image
+              src={"/tw-tasks.png"}
+              width={200}
+              height={400}
+              alt="project screenshot"
+              className="absolute left-[50%] top-[40%] z-10 h-full w-full translate-x-[-50%] rounded-2xl shadow-xl transition-all hover:z-10 hover:scale-110 max-md:top-[80%]"
+            />
+            <Image
+              src={"/tw-wallet.png"}
+              width={200}
+              height={400}
+              alt="project screenshot"
+              className="absolute -right-[52%] top-0 h-full w-full rounded-2xl shadow-xl transition-all hover:z-20 hover:scale-110 max-md:-right-[25%] max-md:top-[160%]"
+            />
+          </motion.div>
         </div>
       ) : (
         <div className="flex grow h-full w-full items-center max-w-3xl mx-auto mt-20 gap-8 text-center flex-col">
