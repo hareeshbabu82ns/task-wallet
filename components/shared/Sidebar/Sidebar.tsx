@@ -28,7 +28,7 @@ const tabs = [
   { icon: <RxDashboard className="w-6 h-6" />, label: "Dashboard" },
   { icon: <TfiIcons.TfiWallet className="w-6 h-6" />, label: "Wallet" },
   { icon: <CiIcons.CiCircleList className="w-7 h-7" />, label: "Tasks" },
-  { icon: <AiIcons.AiOutlineSetting className="w-6 h-6" />, label: "Settings" },
+  // { icon: <AiIcons.AiOutlineSetting className="w-6 h-6" />, label: "Settings" },
 ];
 
 const Routes = () => {

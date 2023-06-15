@@ -38,6 +38,10 @@ const Modal: React.FC<{
     props.setOpen(false);
   }
 
+  const onSuccess = () => {
+    props.setOpen(false);
+  };
+
   const onSubmit: React.FormEventHandler = async (e) => {
     e.preventDefault();
     if (nameInput.error || descriptionInput.error) {
@@ -51,7 +55,8 @@ const Modal: React.FC<{
         nameInput.value,
         descriptionInput.value,
         user?.$id,
-        realmStore
+        realmStore,
+        onSuccess
       );
 
     // signUp(nameInput.value, emailInput.value, passwordInput.value, authStore);

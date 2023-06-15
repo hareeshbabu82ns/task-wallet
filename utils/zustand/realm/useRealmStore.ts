@@ -28,7 +28,8 @@ export const createRealm = async (
   name: string,
   description: string,
   userId: string,
-  realmStore: IRealmStore
+  realmStore: IRealmStore,
+  onSuccess: () => void
 ) => {
   try {
     const res = await database.createDocument(

@@ -105,7 +105,7 @@ const WalletPage = () => {
     <div className="p-[min(3vh,3vw)] py-[min(2vh,2vw)] relative flex flex-col h-full gap-4 overflow-auto grow max-[900px]:h-fit">
       <button
         onClick={() => setNewTransactionModal(true)}
-        className="p-1 bg-gradient-to-b from-primary to-secondary justify-center flex items-center gap-2 fixed rounded-full right-[4rem] bottom-[4rem]"
+        className="p-1 bg-gradient-to-b from-primary to-secondary justify-center flex items-center gap-2 fixed rounded-full right-[5rem] bottom-[5rem]"
       >
         <IoIosAdd className="w-8 h-8" />
       </button>
@@ -128,12 +128,17 @@ const WalletPage = () => {
           })}
         {transactionsIsLoading && <TransactionsSkeleton />}
         {!transactionsIsLoading &&
-          (!transactions || transactions.length) === 0 && (
-            <h1 className="text-center text-lg my-5">No Transaction Found!</h1>
+          (!transactions || transactions.length) === 0 &&
+          page === 1 && (
+            <h1 className="text-center text-lg my-20">No Transaction Found!</h1>
           )}
-        {!transactionsIsLoading && page && !hasMore && (
-          <h1 className="text-center text-lg my-5">End of results.</h1>
-        )}
+        {!transactionsIsLoading &&
+          transactions &&
+          transactions?.length > 0 &&
+          page &&
+          !hasMore && (
+            <h1 className="text-center text-lg my-5">End of results.</h1>
+          )}
       </div>
     </div>
   );

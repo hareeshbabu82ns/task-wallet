@@ -30,7 +30,7 @@ const TasksPage = () => {
     <div className="p-[min(3vh,3vw)] py-[min(2vh,2vw)] h-full relative flex flex-col grow overflow-auto gap-[min(3vh,3vw)] max-[900px]:h-fit">
       <button
         onClick={() => setNewTransactionModal(true)}
-        className="p-1 bg-gradient-to-b z-10 from-primary to-secondary justify-center flex items-center gap-2 fixed rounded-full right-[4rem] bottom-[4rem]"
+        className="p-1 bg-gradient-to-b z-10 from-primary to-secondary justify-center flex items-center gap-2 fixed rounded-full right-[5rem] bottom-[5rem]"
       >
         <IoIosAdd className="w-8 h-8" />
       </button>
