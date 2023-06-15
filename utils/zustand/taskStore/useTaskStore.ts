@@ -97,6 +97,7 @@ export const createTask = async (input: {
     );
 
     // if( taskStore?.tasks && taskStore?.tasks[status]){
+    console.log(dueDate);
 
     if (taskStore[status]) {
       const updateTaskFunction =
@@ -504,6 +505,39 @@ export const getNewPageTasks = async (input: {
     setIsLoading(false);
   } catch (error: any) {
     input.setIsLoading(false);
+    toast.error(error?.message || "Something Went Wrong!");
+  }
+};
+
+export const deleteTask = async (input: {
+  task: ITask;
+  taskStore: ITaskStore;
+}) => {
+  try {
+    const { taskStore, task } = input;
+
+    const setTasksFunction =
+      (task.status === "in-progress" && taskStore.setInProgress) ||
+      (task.status === "todo" && taskStore.setTodo) ||
+      (task.status === "completed" && taskStore.setCompleted);
+
+    const tasksColumn: ITaskListInfo = Object.assign(
+      taskStore[task.status]!,
+      {}
+    );
+
+    const taskIdx = tasksColumn.tasks?.findIndex((e) => e.$id === task.$id);
+
+    taskIdx !== undefined && tasksColumn.tasks?.splice(taskIdx, 1);
+
+    if (setTasksFunction) setTasksFunction(tasksColumn);
+
+    await database.deleteDocument(
+      process.env.NEXT_PUBLIC_DATABASE_ID || "",
+      process.env.NEXT_PUBLIC_TASKS_COLLECTION_ID || "",
+      task.$id
+    );
+  } catch (error: any) {
     toast.error(error?.message || "Something Went Wrong!");
   }
 };

@@ -139,7 +139,7 @@ const NewTransactionModal: React.FC<{
       <Transition appear show={props.open} as={Fragment}>
         <Dialog
           as="div"
-          className="relative z-10 w-[max(80vh,80vw)]"
+          className="relative z-50 w-[max(80vh,80vw)]"
           onClose={closeModal}
         >
           <Transition.Child

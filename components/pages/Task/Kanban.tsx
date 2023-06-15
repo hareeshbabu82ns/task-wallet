@@ -7,7 +7,13 @@ import {
   hanldeDragDrop,
   useTasksStore,
 } from "@/utils/zustand/taskStore/useTaskStore";
-import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
+import React, {
+  Dispatch,
+  SetStateAction,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { BsCircleHalf } from "react-icons/bs";
 import { FaCheckCircle } from "react-icons/fa";
 import * as TbIcons from "react-icons/tb";
@@ -23,6 +29,7 @@ import "react-loading-skeleton/dist/skeleton.css";
 import { TaskFilters } from "@/pages/[realm]/tasks";
 import { useInView } from "react-intersection-observer";
 import { MdAdd, MdAddCircle } from "react-icons/md";
+import autoAnimate from "@formkit/auto-animate";
 
 const boards = [
   {
@@ -52,7 +59,7 @@ const Kanban: React.FC<{
   const taskStore = useTasksStore((s) => s);
 
   return (
-    <div className="w-full h-full grow gap-[min(2vh,2vw)] overflow-hidden grid grid-cols-3 justify-between">
+    <div className="w-full h-full grow gap-[min(2vh,2vw)] overflow-hidden grid grid-cols-3 max-[900px]:grid-cols-2 justify-between">
       <DragDropContext
         onDragEnd={(res) => hanldeDragDrop({ result: res, taskStore })}
       >
@@ -174,9 +181,9 @@ const TasksColumn: React.FC<{
                   props.setDefaultStatus(props.enum);
                   props.setNewTransactionModal(true);
                 }}
-                className="w-full h-32 cursor-pointer rounded-2xl shadow-shadow-primary-xsm flex justify-center items-center"
+                className="w-full cursor-pointer rounded-2xl flex justify-center items-center"
               >
-                <span className="text-lg flex gap-3 items-center border-dashed border border-border-primary py-2 px-6 rounded-2xl">
+                <span className="text-lg flex gap-3 items-center border-dashed border w-full justify-center border-border-primary py-2 px-6 rounded-2xl">
                   Create Task{" "}
                   <span className="">
                     <MdAdd />

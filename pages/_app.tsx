@@ -13,7 +13,7 @@ import { useRealmStore } from "@/utils/zustand/realm/useRealmStore";
 
 export default function App({ Component, pageProps }: AppProps) {
   const router = useRouter();
-  const pagesWithoutSidebar = ["/sign-up", "/login"];
+  const pagesWithoutSidebar = ["/sign-up", "/login", "/"];
   const [showSideBar, setShowSidebar] = useState(false);
 
   const [firstLogin, setFirstLogin] = useState(true);

@@ -4,16 +4,15 @@ import Image from "next/image";
 import React, { forwardRef, useState } from "react";
 import { Draggable } from "react-beautiful-dnd";
 import * as Popover from "@radix-ui/react-popover";
-import { RxMixerHorizontal } from "react-icons/rx";
-import { GiCrossMark } from "react-icons/gi";
 import { MdDelete } from "react-icons/md";
 
-import {
-  BsClockHistory,
-  BsThreeDots,
-  BsThreeDotsVertical,
-} from "react-icons/bs";
+import { BsClockHistory } from "react-icons/bs";
 import TaskInfoModal from "./TaskInfoModal";
+import Alert from "@/components/common/alert/Alert";
+import {
+  deleteTask,
+  useTasksStore,
+} from "@/utils/zustand/taskStore/useTaskStore";
 
 interface ComponetProps {
   task: ITask;
@@ -23,6 +22,10 @@ interface ComponetProps {
 const TaskCard = forwardRef<HTMLDivElement, ComponetProps>(
   ({ task, index }, ref) => {
     const [infoModal, setInfoModal] = useState(false);
+
+    const [alertModal, setAlertModal] = useState(false);
+
+    const taskStore = useTasksStore((e) => e);
 
     const clippedText =
       task.description.length >= 70
@@ -34,7 +37,7 @@ const TaskCard = forwardRef<HTMLDivElement, ComponetProps>(
         <Draggable draggableId={task.$id} index={index}>
           {(draggableProvided, draggableSnapshot) => (
             <div
-              className="w-full shadow-shadow-primary-xsm bg-bg-primary flex-wrap  pb-0 pt-8 relative rounded-lg flex flex-col"
+              className="w-full grow shadow-shadow-primary-xsm bg-bg-primary flex-wrap  pb-0 pt-8 relative rounded-lg flex flex-col"
               {...draggableProvided.dragHandleProps}
               {...draggableProvided.draggableProps}
               ref={draggableProvided.innerRef}
@@ -45,6 +48,7 @@ const TaskCard = forwardRef<HTMLDivElement, ComponetProps>(
                     <button
                       className="absolute right-2 top-2"
                       aria-label="Update dimensions"
+                      onClick={() => setAlertModal(true)}
                     >
                       <MdDelete className="w-5 h-5" />
                     </button>
@@ -98,6 +102,14 @@ const TaskCard = forwardRef<HTMLDivElement, ComponetProps>(
           )}
         </Draggable>
         <TaskInfoModal task={task} open={infoModal} setOpen={setInfoModal} />
+        <Alert
+          open={alertModal}
+          text="Are you sure you want to delete?"
+          onConfirm={() => {
+            deleteTask({ task, taskStore });
+          }}
+          setOpen={setAlertModal}
+        />
       </div>
     );
   }

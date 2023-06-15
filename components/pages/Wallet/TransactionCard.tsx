@@ -72,10 +72,10 @@ const TransactionCard = forwardRef<HTMLDivElement, ComponetProps>(
                   transaction.method[0].toUpperCase()
                 )}
               </span>
-              <span>
+              {/* <span>
                 <span>Updated Balance: </span>
                 {transaction.balance}
-              </span>
+              </span> */}
             </span>
           </div>
         </div>

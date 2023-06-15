@@ -101,6 +101,7 @@ const NewTaskModal: React.FC<{
 
   const handleDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSelectedDate(event.target.value);
+    console.log(event.target.value);
   };
 
   function closeModal() {
@@ -143,6 +144,7 @@ const NewTaskModal: React.FC<{
       onSuccess,
       images: selectedImages || undefined,
       setIsLoading,
+      dueDate: selectedDate || undefined,
     });
   };
 
