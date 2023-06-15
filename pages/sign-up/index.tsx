@@ -11,7 +11,7 @@ import { useRealmStore } from "@/utils/zustand/realm/useRealmStore";
 const SignUp = () => {
   const emailInput = useInput<string>(validators.emailValidator, "");
   const passwordInput = useInput<string>(validators.passwordValidator, "");
-  const nameInput = useInput<string>(validators.passwordValidator, "");
+  const nameInput = useInput<string>(validators.charactersValidator(3, 30), "");
 
   const router = useRouter();
   const authStore = useAuthStore((s) => s);
