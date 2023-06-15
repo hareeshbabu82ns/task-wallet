@@ -9,6 +9,7 @@ import {
   useAuthStore,
 } from "@/utils/zustand/authStore/useAuthStore";
 import * as validators from "@/utils/formValidators";
+import { useRealmStore } from "@/utils/zustand/realm/useRealmStore";
 
 const SignIn = () => {
   const emailInput = useInput<string>(validators.emailValidator, "");
@@ -19,6 +20,8 @@ const SignIn = () => {
   const authStore = useAuthStore((s) => s);
   const { loggedIn, user } = authStore;
 
+  const { currentRealm } = useRealmStore((s) => s);
+
   const onSubmit: React.FormEventHandler = async (e) => {
     e.preventDefault();
     if (emailInput.error || passwordInput.error) {
@@ -28,6 +31,12 @@ const SignIn = () => {
     }
     loginUser(emailInput.value, passwordInput.value, authStore);
   };
+
+  useEffect(() => {
+    if (authStore.loggedIn && currentRealm) {
+      router.push(`/${currentRealm.name}/dashboard`);
+    }
+  }, [loggedIn, currentRealm]);
   return (
     <div className="flex items-center h-full">
       <div className="mx-auto w-fit min-w-[40vh] rounded-xl bg-bg-primary px-8 py-12 shadow-shadow-primary-sm">

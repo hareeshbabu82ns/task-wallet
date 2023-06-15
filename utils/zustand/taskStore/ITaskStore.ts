@@ -5,10 +5,10 @@ export enum ETaskStatuses {
 }
 
 export enum ETaskPriorities {
-  uergent = "urgent",
-  high = "high",
-  medium = "medium",
   low = "low",
+  medium = "medium",
+  high = "high",
+  urgent = "urgent",
 }
 
 export type ITaskStore = {

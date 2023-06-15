@@ -118,6 +118,145 @@ export const createTask = async (input: {
   }
 };
 
+export const updateTask = async (input: {
+  taskStore: ITaskStore;
+  task: ITask;
+  userId: string;
+  realm: string;
+  status: ETaskStatuses;
+  priority: string;
+  title: string;
+  description: string;
+  onSuccess: () => void;
+  images?: File[];
+  dueDate?: string;
+  setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
+}) => {
+  try {
+    const {
+      description,
+      priority,
+      realm,
+      status,
+      title,
+      userId,
+      images,
+      setIsLoading,
+      onSuccess,
+      taskStore,
+      dueDate,
+      task,
+    } = input;
+
+    setIsLoading(true);
+
+    const imagesUrl: string[] = task.images;
+
+    if (images) {
+      await Promise.all(
+        images.map(async (file) => {
+          const promise = await storage.createFile(
+            process.env.NEXT_PUBLIC_STORAGE_ID || "",
+            ID.unique(),
+            file
+          );
+          imagesUrl.push(
+            `https://cloud.appwrite.io/v1/storage/buckets/${process.env.NEXT_PUBLIC_STORAGE_ID}/files/${promise.$id}/view?project=647dc841ab72fff2362b`
+          );
+        })
+      );
+    }
+
+    // if (taskStore[status])
+    //   console.log(taskStore?.tasks, taskStore?.tasks[status]?.totalLength);
+
+    const res: any = await database.updateDocument(
+      process.env.NEXT_PUBLIC_DATABASE_ID || "",
+      process.env.NEXT_PUBLIC_TASKS_COLLECTION_ID || "",
+      task.$id,
+      {
+        userId: userId,
+        realm: realm,
+        title,
+        status,
+        priority,
+        description: description,
+        keywords: `${title}`,
+        images: imagesUrl,
+        index: (taskStore[status]?.totalLength || 0) + 1,
+        dueDate: dueDate || null,
+      }
+    );
+
+    if (task.status !== status) {
+      const previousTasksColumn: ITaskListInfo = Object.assign(
+        taskStore[task.status]!,
+        {}
+      );
+
+      const newTasksColumn: ITaskListInfo = Object.assign(
+        taskStore[status]!,
+        {}
+      );
+
+      const previousTaskColumnFunction =
+        (task.status === "in-progress" && taskStore.setInProgress) ||
+        (task.status === "todo" && taskStore.setTodo) ||
+        (task.status === "completed" && taskStore.setCompleted);
+
+      const newTaskColumnFunction =
+        (status === "in-progress" && taskStore.setInProgress) ||
+        (status === "todo" && taskStore.setTodo) ||
+        (status === "completed" && taskStore.setCompleted);
+
+      const taskIdx = taskStore[task.status]?.tasks?.findIndex(
+        (e) => e.$id === task.$id
+      );
+
+      previousTasksColumn &&
+        taskIdx !== undefined &&
+        previousTasksColumn?.tasks?.splice(taskIdx, 1);
+
+      previousTaskColumnFunction &&
+        previousTaskColumnFunction(previousTasksColumn);
+
+      newTasksColumn.tasks = [res, ...(newTasksColumn.tasks || [])];
+
+      newTaskColumnFunction && newTaskColumnFunction(newTasksColumn);
+
+      console.log(newTasksColumn, previousTasksColumn, taskIdx);
+    }
+
+    if (task.status === status) {
+      const tasksColumn: ITaskListInfo = Object.assign(
+        taskStore[task.status]!,
+        {}
+      );
+
+      const taskColumnFunction =
+        (task.status === "in-progress" && taskStore.setInProgress) ||
+        (task.status === "todo" && taskStore.setTodo) ||
+        (task.status === "completed" && taskStore.setCompleted);
+
+      tasksColumn.tasks =
+        tasksColumn.tasks?.map((taskInfo) => {
+          if (taskInfo.$id === task.$id) {
+            return res;
+          }
+          return taskInfo;
+        }) || null;
+
+      taskColumnFunction && taskColumnFunction(tasksColumn);
+    }
+
+    setIsLoading(false);
+    onSuccess();
+  } catch (error: any) {
+    input.setIsLoading(false);
+    toast.error(error?.message || "Something Went Wrong!");
+  }
+};
+
 export const hanldeDragDrop = async (input: {
   taskStore: ITaskStore;
   result: DropResult;

@@ -16,6 +16,8 @@ export default function App({ Component, pageProps }: AppProps) {
   const pagesWithoutSidebar = ["/sign-up", "/login"];
   const [showSideBar, setShowSidebar] = useState(false);
 
+  const [firstLogin, setFirstLogin] = useState(true);
+
   const authStore = useAuthStore((s) => s);
 
   const { loggedIn } = authStore;
@@ -23,8 +25,11 @@ export default function App({ Component, pageProps }: AppProps) {
   const { currentRealm } = useRealmStore((s) => s);
 
   useEffect(() => {
-    if (authStore.loggedIn && currentRealm) {
+    if (authStore.loggedIn && currentRealm && firstLogin) {
       router.push(`/${currentRealm.name}/dashboard`);
+    }
+    if (firstLogin) {
+      setFirstLogin(false);
     }
   }, [loggedIn, currentRealm]);
 
@@ -52,7 +57,7 @@ export default function App({ Component, pageProps }: AppProps) {
           <div className="grow flex  max-[900px]:flex-col-reverse min-h-full overflow-auto relative">
             {/* <SecondaryNavbar />  */}
 
-            <Sidebar />
+            {showSideBar && <Sidebar />}
             <div className="w-full flex grow flex-col h-full max-lg:w-fit max-[900px]:pb-20 max-[900px]:h-fit">
               <Component {...pageProps} />
             </div>

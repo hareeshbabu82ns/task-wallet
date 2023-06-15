@@ -1,7 +1,7 @@
 import { ITask } from "@/utils/zustand/taskStore/ITaskStore";
 import dayjs from "dayjs";
 import Image from "next/image";
-import React, { forwardRef } from "react";
+import React, { forwardRef, useState } from "react";
 import { Draggable } from "react-beautiful-dnd";
 import * as Popover from "@radix-ui/react-popover";
 import { RxMixerHorizontal } from "react-icons/rx";
@@ -11,6 +11,7 @@ import {
   BsThreeDots,
   BsThreeDotsVertical,
 } from "react-icons/bs";
+import TaskInfoModal from "./TaskInfoModal";
 
 interface ComponetProps {
   task: ITask;
@@ -19,15 +20,15 @@ interface ComponetProps {
 
 const TaskCard = forwardRef<HTMLDivElement, ComponetProps>(
   ({ task, index }, ref) => {
+    const [infoModal, setInfoModal] = useState(false);
+
     const clippedText =
       task.description.length >= 70
         ? task.description.slice(0, 70) + "..."
         : task.description;
 
-    console.log(task);
-
     return (
-      <div ref={ref}>
+      <div ref={ref} onClick={() => setInfoModal(true)}>
         <Draggable draggableId={task.$id} index={index}>
           {(draggableProvided, draggableSnapshot) => (
             <div
@@ -51,7 +52,10 @@ const TaskCard = forwardRef<HTMLDivElement, ComponetProps>(
                       className="rounded p-2 w-[160px] bg-bg-primary-light first-of-type-[]"
                       sideOffset={5}
                     >
-                      <span className="w-full cursor-pointer block px-1.5 transition-all rounded-md text-text-primary hover:bg-bg-primary">
+                      <span
+                        onClick={() => setInfoModal(true)}
+                        className="w-full cursor-pointer block px-1.5 transition-all rounded-md text-text-primary hover:bg-bg-primary"
+                      >
                         View Details
                       </span>
                       <span className="w-full cursor-pointer block px-1.5 transition-all rounded-md text-text-primary hover:bg-bg-primary">
@@ -108,6 +112,7 @@ const TaskCard = forwardRef<HTMLDivElement, ComponetProps>(
             </div>
           )}
         </Draggable>
+        <TaskInfoModal task={task} open={infoModal} setOpen={setInfoModal} />
       </div>
     );
   }

@@ -9,11 +9,11 @@ const IndexPage = () => {
   const { loggedIn } = useAuthStore((s) => s);
 
   const { currentRealm } = useRealmStore((s) => s);
-  useEffect(() => {
-    if (loggedIn && currentRealm) {
-      router.push(`/${currentRealm.name}/dashboard`);
-    }
-  }, [loggedIn, currentRealm]);
+  // useEffect(() => {
+  //   if (loggedIn && currentRealm) {
+  //     router.push(`/${currentRealm.name}/dashboard`);
+  //   }
+  // }, [loggedIn, currentRealm]);
   return <div>IndexPage</div>;
 };
 

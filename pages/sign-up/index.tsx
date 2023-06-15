@@ -6,6 +6,7 @@ import FormInput from "@/components/common/form/FormInput";
 import { signUp, useAuthStore } from "@/utils/zustand/authStore/useAuthStore";
 import * as validators from "@/utils/formValidators";
 import { useRouter } from "next/router";
+import { useRealmStore } from "@/utils/zustand/realm/useRealmStore";
 
 const SignUp = () => {
   const emailInput = useInput<string>(validators.emailValidator, "");
@@ -15,6 +16,8 @@ const SignUp = () => {
   const router = useRouter();
   const authStore = useAuthStore((s) => s);
   const { loggedIn, user } = authStore;
+
+  const { currentRealm } = useRealmStore((s) => s);
 
   const onSubmit: React.FormEventHandler = async (e) => {
     e.preventDefault();
@@ -34,6 +37,12 @@ const SignUp = () => {
 
     signUp(nameInput.value, emailInput.value, passwordInput.value, authStore);
   };
+
+  useEffect(() => {
+    if (authStore.loggedIn && currentRealm) {
+      router.push(`/${currentRealm.name}/dashboard`);
+    }
+  }, [loggedIn, currentRealm]);
 
   useEffect(() => {
     if (loggedIn) {
