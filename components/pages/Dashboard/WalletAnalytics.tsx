@@ -60,7 +60,7 @@ const WalletAnalytics = () => {
   return (
     <>
       <div className="p-5 rounded-2xl shadow-shadow-form-input w-fit mx-auto">
-        <div className="flex mb-8 ml-14 ">
+        <div className="flex mb-8 ml-14 justify-between">
           <h2 className="text-xl font-semibold">Wallet</h2>
           <FilterOptions
             label="ALL"
