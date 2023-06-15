@@ -93,6 +93,7 @@ export const loginUser = async (
 export const logoutUser = async (authStore: IAuthStore) => {
   try {
     authStore.setUser(false, null);
+    await account.deleteSessions();
   } catch (error: any) {
     console.log(error);
     toast.error(error?.message || "Something Went Wrong!");

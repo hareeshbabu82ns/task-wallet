@@ -63,10 +63,10 @@ export const ComboboxList: React.FC<{ className?: string }> = ({
         );
 
   useEffect(() => {
-    if (user && !realms && !realmsIsLoading) {
+    if (user && !realmsIsLoading) {
       getRealms(user.$id, realmStore, setRealmsIsLoading);
     }
-  }, [user]);
+  }, [user?.$id]);
 
   return (
     <>
