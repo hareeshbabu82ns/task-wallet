@@ -43,7 +43,7 @@ export const getWalletData = async (input: {
     queryList.push(Query.lessThan("date", new Date().toISOString()));
 
     queryList.push(Query.greaterThan("date", today.toISOString()));
-    const res = await database.listDocuments(
+    const res: { documents: ITransaction[] } = await database.listDocuments(
       process.env.NEXT_PUBLIC_DATABASE_ID || "",
       process.env.NEXT_PUBLIC_TRANSACTION_COLLECTION_ID || "",
       queryList
@@ -51,7 +51,12 @@ export const getWalletData = async (input: {
 
     if (res.documents) {
       const modifiedData: {
-        [date: string]: { date: string; credited: number; debited: number };
+        [date: string]: {
+          date: string;
+          credited: number;
+          debited: number;
+          method: string;
+        };
       } = {};
       res.documents.forEach((tran) => {
         const modifiedDate: any = dayjs(tran.date).format("D MMMM YY");
@@ -66,12 +71,14 @@ export const getWalletData = async (input: {
               tran.type === "debit"
                 ? modifiedData[modifiedDate].debited + tran.amount
                 : modifiedData[modifiedDate].debited,
+            method: tran.method,
           };
         } else {
           modifiedData[modifiedDate] = {
             date: modifiedDate,
             credited: tran.type === "credit" ? tran.amount : 0,
             debited: tran.type === "debit" ? tran.amount : 0,
+            method: tran?.method,
           };
         }
       });

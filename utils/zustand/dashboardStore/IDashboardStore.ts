@@ -9,4 +9,5 @@ export type IWalletChartData = {
   date: string;
   credited: number;
   debited: number;
+  method: string;
 };

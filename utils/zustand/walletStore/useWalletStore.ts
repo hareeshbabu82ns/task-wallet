@@ -191,7 +191,18 @@ export const createTransaction = async (input: {
     const newArray = [
       res as ITransaction,
       ...(input.walletStore.transactions || []),
-    ];
+    ].sort((a, b) => {
+      const dateA = new Date(a.date);
+      const dateB = new Date(b.date);
+
+      if (dateA < dateB) {
+        return 1;
+      }
+      if (dateA > dateB) {
+        return -1;
+      }
+      return 0;
+    });
 
     input.walletStore.setTransactions(
       newArray,
@@ -256,6 +267,18 @@ export const getTransactions = async (input: {
       ...(page > 1 ? prevTransactions : []),
       ...(res.documents as ITransaction[]),
     ];
+    updatedArray.sort((a, b) => {
+      const dateA = new Date(a.date);
+      const dateB = new Date(b.date);
+
+      if (dateA < dateB) {
+        return 1;
+      }
+      if (dateA > dateB) {
+        return -1;
+      }
+      return 0;
+    });
 
     walletStore.setTransactions(
       updatedArray,
