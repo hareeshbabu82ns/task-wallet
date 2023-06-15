@@ -80,6 +80,7 @@ export const getRealms = async (
     });
     toast.success("Realm fetched successfully");
     realmStore.setRealms(realms);
+    if (realms.length === 0) realmStore.setCurrentRealm(null);
     setIsLoading(false);
   } catch (error: any) {
     console.log(error);
