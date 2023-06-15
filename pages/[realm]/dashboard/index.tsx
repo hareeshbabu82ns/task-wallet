@@ -11,7 +11,7 @@ import React, { useEffect, useState } from "react";
 
 const DashboardPage = () => {
   return (
-    <div className="p-10 py-6 flex flex-col grow h-full overflow-hidden justify-center items-center">
+    <div className="p-10 py-6 flex flex-col grow h-full overflow-hidden">
       <WalletAnalytics />
     </div>
   );

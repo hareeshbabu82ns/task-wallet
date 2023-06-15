@@ -6,6 +6,7 @@ import { useAuthStore } from "@/utils/zustand/authStore/useAuthStore";
 import { useRealmStore } from "@/utils/zustand/realm/useRealmStore";
 import { useEffect } from "react";
 import { ComboboxList } from "@/components/common/combobox/Combobox";
+import Link from "next/link";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -44,9 +45,19 @@ export default function Home() {
             that simplifies expense tracking, task management, and provides
             actionable analytics for ultimate efficiency.
           </p>
-          <div className="flex gap-4">
-            <ButtonPrimary className="text-sm !px-4 py-1" text="Login" />{" "}
-            <ButtonPrimary className="text-sm !px-4 py-1" text="Signup" />{" "}
+          <div className="flex gap-2">
+            <Link
+              className="!px-4 py-1 bg-gradient-to-b   from-primary text-xl to-secondary bg-clip-text text-transparent"
+              href="/login"
+            >
+              Login
+            </Link>{" "}
+            <Link
+              className="px-4 py-1 bg-gradient-to-b   from-primary text-xl to-secondary bg-clip-text text-transparent"
+              href="/sign-up"
+            >
+              Sign-Up
+            </Link>{" "}
           </div>
         </div>
       ) : (
