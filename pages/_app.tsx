@@ -28,6 +28,9 @@ export default function App({ Component, pageProps }: AppProps) {
     if (authStore.loggedIn && currentRealm && firstLogin) {
       router.push(`/${currentRealm.name}/dashboard`);
     }
+    if (authStore.loggedIn && !currentRealm) {
+      router.push(`/`);
+    }
     if (firstLogin) {
       setFirstLogin(false);
     }

@@ -8,7 +8,9 @@ import { useAuthStore } from "@/utils/zustand/authStore/useAuthStore";
 import { IRealm } from "@/utils/zustand/realm/IRealmStore";
 import { useRouter } from "next/router";
 
-export default function Conmbobox() {
+export const ComboboxList: React.FC<{ className?: string }> = ({
+  className,
+}) => {
   const [selected, setSelected] = useState<IRealm | null>(null);
   const router = useRouter();
   const [query, setQuery] = useState("");
@@ -69,12 +71,12 @@ export default function Conmbobox() {
   return (
     <>
       {realms && selected ? (
-        <div className="w-fit ml-auto">
+        <div className={`"w-fit ml-auto`}>
           <Combobox value={selected} onChange={onChange}>
             <div className="relative z-50">
               <div className="relative w-full cursor-default rounded-lg shadow-shadow-form-input text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-teal-300 sm:text-sm">
                 <Combobox.Input
-                  className="w-full border-none py-2 pl-3 bg-transparent focus:outline-none text-text-primary pr-10 text-sm leading-5 focus:ring-0"
+                  className={` w-full border-none py-2 pl-3 bg-transparent focus:outline-none text-text-primary pr-10 text-sm leading-5 focus:ring-0`}
                   displayValue={(item) => selected.name}
                   onChange={(event) => setQuery(event.target.value)}
                 />
@@ -198,4 +200,6 @@ export default function Conmbobox() {
       </Modal>
     </>
   );
-}
+};
+
+export default ComboboxList;
