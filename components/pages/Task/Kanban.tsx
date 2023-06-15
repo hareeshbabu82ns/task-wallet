@@ -7,7 +7,7 @@ import {
   hanldeDragDrop,
   useTasksStore,
 } from "@/utils/zustand/taskStore/useTaskStore";
-import React, { useEffect, useState } from "react";
+import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { BsCircleHalf } from "react-icons/bs";
 import { FaCheckCircle } from "react-icons/fa";
 import * as TbIcons from "react-icons/tb";
@@ -22,6 +22,7 @@ import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import { TaskFilters } from "@/pages/[realm]/tasks";
 import { useInView } from "react-intersection-observer";
+import { MdAdd, MdAddCircle } from "react-icons/md";
 
 const boards = [
   {
@@ -43,7 +44,11 @@ const boards = [
   },
 ];
 
-const Kanban: React.FC<{ filters?: TaskFilters }> = ({ filters }) => {
+const Kanban: React.FC<{
+  filters?: TaskFilters;
+  setNewTransactionModal: Dispatch<SetStateAction<boolean>>;
+  setDefaultStatus: Dispatch<SetStateAction<ETaskStatuses>>;
+}> = ({ filters, setNewTransactionModal, setDefaultStatus }) => {
   const taskStore = useTasksStore((s) => s);
 
   return (
@@ -52,7 +57,13 @@ const Kanban: React.FC<{ filters?: TaskFilters }> = ({ filters }) => {
         onDragEnd={(res) => hanldeDragDrop({ result: res, taskStore })}
       >
         {boards.map((board) => (
-          <TasksColumn filters={filters} key={board.enum} {...board} />
+          <TasksColumn
+            setNewTransactionModal={setNewTransactionModal}
+            setDefaultStatus={setDefaultStatus}
+            filters={filters}
+            key={board.enum}
+            {...board}
+          />
         ))}
       </DragDropContext>
     </div>
@@ -66,6 +77,8 @@ const TasksColumn: React.FC<{
   enum: ETaskStatuses;
   icon: React.JSX.Element;
   filters?: TaskFilters;
+  setNewTransactionModal: Dispatch<SetStateAction<boolean>>;
+  setDefaultStatus: Dispatch<SetStateAction<ETaskStatuses>>;
 }> = (props) => {
   const taskStore = useTasksStore((s) => s);
 
@@ -155,6 +168,22 @@ const TasksColumn: React.FC<{
                 }
                 return <TaskCard task={e} key={e.$id} index={i} />;
               })}
+            {!isLoading && (
+              <div
+                onClick={() => {
+                  props.setDefaultStatus(props.enum);
+                  props.setNewTransactionModal(true);
+                }}
+                className="w-full h-32 cursor-pointer rounded-2xl shadow-shadow-primary-xsm flex justify-center items-center"
+              >
+                <span className="text-lg flex gap-3 items-center border-dashed border border-border-primary py-2 px-6 rounded-2xl">
+                  Create Task{" "}
+                  <span className="">
+                    <MdAdd />
+                  </span>
+                </span>
+              </div>
+            )}{" "}
           </div>
           {droppableProvided.placeholder}
           {isLoading && <TodoSkeleton />}

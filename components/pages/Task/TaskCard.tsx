@@ -6,6 +6,8 @@ import { Draggable } from "react-beautiful-dnd";
 import * as Popover from "@radix-ui/react-popover";
 import { RxMixerHorizontal } from "react-icons/rx";
 import { GiCrossMark } from "react-icons/gi";
+import { MdDelete } from "react-icons/md";
+
 import {
   BsClockHistory,
   BsThreeDots,
@@ -39,31 +41,14 @@ const TaskCard = forwardRef<HTMLDivElement, ComponetProps>(
             >
               <div className="px-3">
                 <Popover.Root>
-                  <Popover.Trigger asChild>
+                  <Popover.Trigger asChild onClick={(e) => e.stopPropagation()}>
                     <button
                       className="absolute right-2 top-2"
                       aria-label="Update dimensions"
                     >
-                      <BsThreeDotsVertical className="w-4 h-4" />
+                      <MdDelete className="w-5 h-5" />
                     </button>
                   </Popover.Trigger>
-                  <Popover.Portal>
-                    <Popover.Content
-                      className="rounded p-2 w-[160px] bg-bg-primary-light first-of-type-[]"
-                      sideOffset={5}
-                    >
-                      <span
-                        onClick={() => setInfoModal(true)}
-                        className="w-full cursor-pointer block px-1.5 transition-all rounded-md text-text-primary hover:bg-bg-primary"
-                      >
-                        View Details
-                      </span>
-                      <span className="w-full cursor-pointer block px-1.5 transition-all rounded-md text-text-primary hover:bg-bg-primary">
-                        Delete
-                      </span>
-                      <Popover.Arrow className="fill-white" />
-                    </Popover.Content>
-                  </Popover.Portal>
                 </Popover.Root>
                 <span
                   className={`absolute left-0 text-[10px] top-0 px-3 rounded-tl-lg border py-0.5 border-dashed rounded-br-lg ${

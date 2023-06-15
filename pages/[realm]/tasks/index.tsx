@@ -4,6 +4,7 @@ import NewTaskModal from "@/components/pages/Task/NewTaskModal";
 import TaskPageHeader from "@/components/pages/Task/TaskPageHeader";
 import { useAuthStore } from "@/utils/zustand/authStore/useAuthStore";
 import { useRealmStore } from "@/utils/zustand/realm/useRealmStore";
+import { ETaskStatuses } from "@/utils/zustand/taskStore/ITaskStore";
 import {
   getTasks,
   useTasksStore,
@@ -19,6 +20,10 @@ export type TaskFilters = {
 const TasksPage = () => {
   const [newTransactionModal, setNewTransactionModal] = useState(false);
 
+  const [defaultStatus, setDefaultStatus] = useState<ETaskStatuses>(
+    "todo" as ETaskStatuses
+  );
+
   const [filters, setFilters] = useState<TaskFilters | null>(null);
 
   return (
@@ -32,9 +37,14 @@ const TasksPage = () => {
       <NewTaskModal
         setOpen={setNewTransactionModal}
         open={newTransactionModal}
+        status={defaultStatus}
       />{" "}
       <TaskPageHeader filters={filters || undefined} setFilters={setFilters} />
-      <Kanban filters={filters || undefined} />
+      <Kanban
+        setNewTransactionModal={setNewTransactionModal}
+        filters={filters || undefined}
+        setDefaultStatus={setDefaultStatus}
+      />
     </div>
   );
 };

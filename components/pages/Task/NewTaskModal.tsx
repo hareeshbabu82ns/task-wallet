@@ -4,6 +4,7 @@ import React, {
   Dispatch,
   Fragment,
   SetStateAction,
+  useEffect,
   useRef,
   useState,
 } from "react";
@@ -28,10 +29,7 @@ import {
 
 const statusOptions = Object.values(ETaskStatuses).map((val) => {
   return {
-    name: val
-      .split("-")
-      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-      .join("-"),
+    name: val.charAt(0).toUpperCase() + val.slice(1),
   };
 });
 
@@ -42,6 +40,7 @@ const priorityOptions = Object.values(ETaskPriorities).map((val) => {
 const NewTaskModal: React.FC<{
   open: boolean;
   setOpen: Dispatch<SetStateAction<boolean>>;
+  status: string;
 }> = (props) => {
   const inputRef = useRef<HTMLInputElement | null>(null);
 
@@ -147,6 +146,12 @@ const NewTaskModal: React.FC<{
     });
   };
 
+  useEffect(() => {
+    statusInput.onChange(
+      statusOptions.find((e) => e.name.toLowerCase() === props.status)?.name ||
+        statusOptions[0].name
+    );
+  }, [props.open]);
   return (
     <>
       <Transition appear show={props.open} as={Fragment}>
