@@ -59,7 +59,7 @@ const Kanban: React.FC<{
   const taskStore = useTasksStore((s) => s);
 
   return (
-    <div className="w-full h-full grow gap-[min(2vh,2vw)] overflow-hidden grid grid-cols-3 max-[900px]:grid-cols-2 justify-between">
+    <div className="w-full h-full grow gap-[min(2vh,2vw)] overflow-hidden grid grid-cols-3 max-[900px]:grid-cols-2 max-[600px]:grid-cols-1 justify-between">
       <DragDropContext
         onDragEnd={(res) => hanldeDragDrop({ result: res, taskStore })}
       >
@@ -153,7 +153,7 @@ const TasksColumn: React.FC<{
     <Droppable droppableId={props.enum}>
       {(droppableProvided, droppableSnapshot) => (
         <div
-          className="w-full h-full relative min-h-[75vh] grow shadow-shadow-form-input rounded-2xl overflow-auto pb-3"
+          className="w-full h-full relative min-h-[75vh] max-[600px]:max-h-[30vh] grow shadow-shadow-form-input rounded-2xl overflow-auto pb-3"
           ref={droppableProvided.innerRef}
           {...droppableProvided.droppableProps}
         >
