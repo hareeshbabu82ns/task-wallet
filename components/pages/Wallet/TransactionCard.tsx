@@ -20,7 +20,7 @@ const TransactionCard = forwardRef<HTMLDivElement, ComponetProps>(
     return (
       <div
         ref={ref || null}
-        className="w-full p-2 px-[min(3vh,3vw)] rounded-2xl flex-wrap shadow-shadow-primary-xsm gap-[min(2vh,2vw)] grid grid-cols-[5fr,2fr,2fr] max-[600px]:grid-cols-[5fr,2fr] max-[500px]:grid-cols-[1fr] justify-center items-center"
+        className="w-full p-2 px-[min(3vh,3vw)] rounded-2xl flex-wrap shadow-shadow-primary-xsm gap-[min(2vh,2vw)] grid grid-cols-[5fr,2fr,2fr,1fr] max-[600px]:grid-cols-[5fr,2fr] max-[780px]:grid-cols-[5fr,2fr] max-[500px]:grid-cols-[1fr] justify-center items-center"
       >
         {/* <div className="flex items-center gap-4"> */}
 
@@ -32,12 +32,12 @@ const TransactionCard = forwardRef<HTMLDivElement, ComponetProps>(
           ) : (
             <GiPayMoney className="w-6 h-6 text-[#f03e3e]" />
           )}
-          <span className=" text-gray-300">
-            {transaction.type === "credit" ? "Recieved from: " : "Paid To:"}
-          </span>
+          {/* <span className=" text-gray-300"> */}
+          {/* </span> */}
           <span className="font-medium flex flex-col items-start">
             {" "}
             <span>
+              {transaction.type === "credit" ? "Recieved from: " : "Paid To:"}
               {transaction.type === "credit"
                 ? transaction.from
                 : transaction.to}
