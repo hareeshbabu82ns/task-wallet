@@ -154,8 +154,8 @@ const NewTransactionModal: React.FC<{
             <div className="fixed z-50 inset-0 bg-black bg-opacity-25 backdrop-blur-[1.5px] " />
           </Transition.Child>
 
-          <div className="fixed z-50 inset-0 overflow-y-auto w-[min(80vh,80vw)] h-fit rounded-2xl bg-bg-primary top-1/2 py-4  left-1/2 -translate-x-1/2 shadow-lg -translate-y-1/2">
-            <div className="flex min-h-full items-center justify-center p-4 text-center w-full">
+          <div className="fixed z-50 inset-0 overflow-y-auto w-[min(80vh,80vw)] max-[600px]:w-[92vw] max-h-[90vh] h-fit rounded-2xl bg-bg-primary top-1/2 py-4  left-1/2 -translate-x-1/2 shadow-lg -translate-y-1/2">
+            <div className="flex min-h-full items-center justify-center text-center w-full">
               <Transition.Child
                 as={Fragment}
                 enter="ease-out duration-300"
@@ -165,7 +165,7 @@ const NewTransactionModal: React.FC<{
                 leaveFrom="opacity-100 scale-100"
                 leaveTo="opacity-0 scale-95"
               >
-                <Dialog.Panel className="text-text-primary  w-full max-h[80vh]  transform overflow-hidden  px-6 text-left align-middle  transition-all">
+                <Dialog.Panel className="text-text-primary  w-full max-h[80vh]  transform overflow-hidden text-left align-middle  transition-all">
                   <Dialog.Title
                     as="h3"
                     className="mx-auto mb-8 bg-gradient-to-b from-primary to-secondary bg-clip-text text-center text-2xl text-transparent font-medium"
@@ -175,7 +175,7 @@ const NewTransactionModal: React.FC<{
                   <form
                     noValidate
                     onSubmit={onSubmit}
-                    className="grid gap-10 gap-y-10 grid-cols-2 max-[700px]:grid-cols-1"
+                    className="grid gap-[min(3vh,3vw)] gap-y-[min(4vh,4vw)] max-[600px]:gap-y-[min(6vh,6vw)] grid-cols-2 max-[700px]:grid-cols-1 px-[min(3vh,3vw)]"
                   >
                     <FormInputList
                       lable="Credit/Debit"
