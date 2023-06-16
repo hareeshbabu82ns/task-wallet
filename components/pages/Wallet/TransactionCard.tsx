@@ -20,65 +20,63 @@ const TransactionCard = forwardRef<HTMLDivElement, ComponetProps>(
     return (
       <div
         ref={ref || null}
-        className="w-full p-2 px-[min(3vh,3vw)] rounded-2xl flex-wrap shadow-shadow-primary-xsm gap-[min(2vh,2vw)] flex justify-between items-center"
+        className="w-full p-2 px-[min(3vh,3vw)] rounded-2xl flex-wrap shadow-shadow-primary-xsm gap-[min(2vh,2vw)] grid grid-cols-[5fr,2fr,2fr] max-[600px]:grid-cols-[5fr,2fr] max-[500px]:grid-cols-[1fr] justify-center items-center"
       >
-        <div className="flex flex-col gap-1">
-          <div className="flex items-center gap-4">
-            {transaction.type === "credit" ? (
-              <GiReceiveMoney className="w-6 h-6 text-[#37b24d]" />
-            ) : (
-              <GiPayMoney className="w-6 h-6 text-[#f03e3e]" />
-            )}
-            <div className="flex justify-center text-base flex-col">
-              <div className="flex gap-1.5">
-                <span className=" text-gray-300">
-                  {transaction.type === "credit"
-                    ? "Recieved from: "
-                    : "Paid To:"}
-                </span>
-                <span className="font-medium flex flex-col items-start">
-                  {" "}
-                  <span>
-                    {transaction.type === "credit"
-                      ? transaction.from
-                      : transaction.to}
-                  </span>
-                </span>
-              </div>
-              <span className="text-sm ">{formattedDate}</span>
-            </div>
-          </div>
-        </div>
-        <div>
-          <div className="flex flex-col items-end">
-            <span
-              className={`text-base flex items-center ${
-                transaction.type === "credit"
-                  ? "text-[#37b24d]"
-                  : "text-[#f03e3e]"
-              }`}
-            >
-              <BsCurrencyRupee />
-              <span>
-                {transaction.type === "credit" ? "+" : "-"}
-                {transaction.amount}
-              </span>
+        {/* <div className="flex items-center gap-4"> */}
+
+        {/* <div className="flex justify-center text-base flex-col"> */}
+        {/* <div className="flex gap-1.5"> */}
+        <div className="flex gap-1 items-center">
+          {transaction.type === "credit" ? (
+            <GiReceiveMoney className="w-6 h-6 text-[#37b24d]" />
+          ) : (
+            <GiPayMoney className="w-6 h-6 text-[#f03e3e]" />
+          )}
+          <span className=" text-gray-300">
+            {transaction.type === "credit" ? "Recieved from: " : "Paid To:"}
+          </span>
+          <span className="font-medium flex flex-col items-start">
+            {" "}
+            <span>
+              {transaction.type === "credit"
+                ? transaction.from
+                : transaction.to}
             </span>
-            <span className={`text-sm gap-4 flex items-center`}>
-              <span>
-                Method:{" "}
-                {transaction.method.replace(
-                  transaction.method[0],
-                  transaction.method[0].toUpperCase()
-                )}
-              </span>
-              {/* <span>
+          </span>
+        </div>
+        <span className="text-sm">{formattedDate}</span>
+        {/* </div> */}
+        {/* </div> */}
+        {/* </div> */}
+        {/* <div> */}
+        {/* <div className="flex flex-col items-end"> */}
+        <span className={`text-sm gap-4 flex items-center`}>
+          <span>
+            Method:{" "}
+            {transaction.method.replace(
+              transaction.method[0],
+              transaction.method[0].toUpperCase()
+            )}
+          </span>
+          {/* <span>
                 <span>Updated Balance: </span>
                 {transaction.balance}
               </span> */}
-            </span>
-          </div>
-        </div>
+        </span>
+        <span
+          className={`text-base flex items-center ${
+            transaction.type === "credit" ? "text-[#37b24d]" : "text-[#f03e3e]"
+          }`}
+        >
+          <BsCurrencyRupee />
+          <span>
+            {transaction.type === "credit" ? "+" : "-"}
+            {transaction.amount}
+          </span>
+        </span>
+
+        {/* </div> */}
+        {/* </div> */}
       </div>
     );
   }
