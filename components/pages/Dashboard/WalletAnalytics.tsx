@@ -43,11 +43,12 @@ const WalletAnalytics = () => {
     }
   }, [user, currentRealm, daysFilter]);
 
-  const [chartWidth, setChartWidth] = useState(window.innerWidth * 0.4); // Set an initial width for the chart
-
+  const [chartWidth, setChartWidth] = useState(window.innerWidth * 0.7); // Set an initial width for the chart
+  const [chartHeight, setChartHeight] = useState(window.innerWidth * 0.4);
   useEffect(() => {
     const handleResize = () => {
-      setChartWidth(window.innerWidth * 0.35); // Adjust the width based on the container's size
+      setChartWidth(window.innerWidth * 0.7); // Adjust the width based on the container's size
+      setChartHeight(window.innerHeight * 0.4);
     };
 
     if (window) {
@@ -59,7 +60,7 @@ const WalletAnalytics = () => {
   }, []);
   return (
     <>
-      <div className="p-5 rounded-2xl shadow-shadow-form-input w-fit mx-auto">
+      <div className="p-3 rounded-2xl shadow-shadow-form-input w-fit mx-auto">
         <div className="flex mb-8 ml-14 justify-between">
           <h2 className="text-xl font-semibold">Wallet</h2>
           <FilterOptions
@@ -87,7 +88,7 @@ const WalletAnalytics = () => {
                 className="w-full h-full mb-10"
                 // className="bg-red-100"
                 width={chartWidth}
-                height={300}
+                height={chartHeight}
               >
                 <CartesianGrid strokeDasharray="3 3" />
                 <Tooltip wrapperStyle={{ background: "red" }} />
@@ -122,7 +123,7 @@ const WalletAnalytics = () => {
                 className="w-full h-full"
                 // className="bg-red-100"
                 width={chartWidth}
-                height={300}
+                height={chartHeight}
               >
                 <CartesianGrid strokeDasharray="3 3" />
                 <Tooltip wrapperStyle={{ background: "red" }} />

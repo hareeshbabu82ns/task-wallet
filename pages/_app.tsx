@@ -61,7 +61,7 @@ export default function App({ Component, pageProps }: AppProps) {
             {/* <SecondaryNavbar />  */}
 
             {showSideBar && <Sidebar />}
-            <div className="w-full flex grow flex-col h-full max-lg:w-fit max-[900px]:pb-20 max-[900px]:h-fit">
+            <div className="w-auto flex grow flex-col h-full max-lg:w-auto max-[900px]:pb-20 max-[900px]:h-fit">
               <Component {...pageProps} />
             </div>
           </div>
