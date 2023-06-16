@@ -103,8 +103,8 @@ const WalletHeader: React.FC<{
 
   return (
     <div className="w-full py-3 gap-5 flex-wrap  inset-0 flex justify-between">
-      <div className="flex gap-4">
-        <div className="bg-bg-primary ml-auto items-center justify-between shadow-shadow-primary-xsm p-6 py-1 rounded-xl flex gap-5">
+      <div className="flex gap-4 flex-wrap">
+        <div className="bg-bg-primary items-center justify-between shadow-shadow-primary-xsm p-6 py-1 rounded-xl flex gap-5">
           <div className="flex flex-col gap-1 justify-between">
             <span className="text-base flex items-center font-medium  text-primary">
               {" "}
@@ -151,7 +151,7 @@ const WalletHeader: React.FC<{
           />
           <IoIcons.IoSearch className="absolute top-1/2 -translate-y-1/2 left-4 min-w-5 min-h-5" />
         </div>
-        <div className="flex gap-3">
+        <div className="flex gap-3 flex-wrap">
           <FilterOptions
             multiple={false}
             {...transactionMethodInput}
