@@ -181,7 +181,7 @@ const NewTaskModal: React.FC<{
                 leaveFrom="opacity-100 scale-100"
                 leaveTo="opacity-0 scale-85"
               >
-                <Dialog.Panel className="text-text-primary  w-full max-h[80vh]  transform overflow-hidden text-left align-middle  transition-all">
+                <Dialog.Panel className="text-text-primary  w-full  transform overflow-hidden text-left align-middle  transition-all">
                   <Dialog.Title
                     as="h3"
                     className="mx-auto mb-8 bg-gradient-to-b from-primary to-secondary bg-clip-text text-center text-2xl text-transparent font-medium"
