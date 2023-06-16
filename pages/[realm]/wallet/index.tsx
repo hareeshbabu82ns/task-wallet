@@ -114,7 +114,7 @@ const WalletPage = () => {
         open={newTransactionModal}
       />
       <WalletHeader setFilters={setFilters} />
-      <div className="my-4 mt-2 w-full h-full rounded-2xl flex grow overflow-scroll flex-col gap-3 shadow-shadow-form-input px-6 py-6">
+      <div className="my-4 mt-2 w-full h-full rounded-2xl flex grow overflow-scroll flex-col gap-3 shadow-shadow-form-input px-[min(3vh,3vw)] py-6">
         <h2 className="mb-2 px-2 text-xl font-medium ">Transactions</h2>
         {transactions &&
           (!transactionsIsLoading || newPageIsLoading) &&
