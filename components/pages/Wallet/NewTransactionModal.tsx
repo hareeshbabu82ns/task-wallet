@@ -250,7 +250,7 @@ const NewTransactionModal: React.FC<{
                       />
                     </div>
 
-                    <div className="w-full flex col-[1/-1] justify-end">
+                    <div className="w-full flex col-[1/-1] justify-end px-6 mb-3">
                       <ButtonPrimary
                         isLoading={isLoading}
                         text="Submit"
