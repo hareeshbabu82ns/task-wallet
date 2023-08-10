@@ -6,29 +6,29 @@ import { DropResult } from "react-beautiful-dnd";
 import { Dispatch, SetStateAction } from "react";
 
 const client = new Client();
-const database = new Databases(client);
-const storage = new Storage(client);
+const database = new Databases( client );
+const storage = new Storage( client );
 
 client
-  .setEndpoint("https://cloud.appwrite.io/v1") // Your API Endpoint
-  .setProject("647dc841ab72fff2362b"); // Your project ID
+  .setEndpoint( process.env.NEXT_PUBLIC_APPWRITE_ENDPOINT ) // Your API Endpoint
+  .setProject( process.env.NEXT_PUBLIC_APPWRITE_PROJECT_ID ); // Your project ID
 
-export const useTasksStore = create<ITaskStore>((set) => ({
+export const useTasksStore = create<ITaskStore>( ( set ) => ( {
   todo: null,
-  setTodo: (todo) => {
-    set({ todo });
+  setTodo: ( todo ) => {
+    set( { todo } );
   },
   "in-progress": null,
-  setInProgress: (inProgress) => {
-    set({ "in-progress": inProgress });
+  setInProgress: ( inProgress ) => {
+    set( { "in-progress": inProgress } );
   },
   completed: null,
-  setCompleted: (completed) => {
-    set({ completed });
+  setCompleted: ( completed ) => {
+    set( { completed } );
   },
-}));
+} ) );
 
-export const createTask = async (input: {
+export const createTask = async ( input: {
   taskStore: ITaskStore;
   userId: string;
   realm: string;
@@ -40,7 +40,7 @@ export const createTask = async (input: {
   images?: File[];
   dueDate?: string;
   setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
-}) => {
+} ) => {
   try {
     const {
       description,
@@ -56,22 +56,22 @@ export const createTask = async (input: {
       dueDate,
     } = input;
 
-    setIsLoading(true);
+    setIsLoading( true );
 
     const imagesUrl: string[] = [];
 
-    if (images) {
+    if ( images ) {
       await Promise.all(
-        images.map(async (file) => {
+        images.map( async ( file ) => {
           const promise = await storage.createFile(
-            process.env.NEXT_PUBLIC_STORAGE_ID || "",
+            process.env.NEXT_PUBLIC_APPWRITE_STORAGE_BUCKET_ID || "",
             ID.unique(),
             file
           );
           imagesUrl.push(
-            `https://cloud.appwrite.io/v1/storage/buckets/${process.env.NEXT_PUBLIC_STORAGE_ID}/files/${promise.$id}/view?project=647dc841ab72fff2362b`
+            `${process.env.NEXT_PUBLIC_APPWRITE_ENDPOINT}/storage/buckets/${process.env.NEXT_PUBLIC_APPWRITE_STORAGE_BUCKET_ID}/files/${promise.$id}/view?project=${process.env.NEXT_PUBLIC_APPWRITE_PROJECT_ID}`
           );
-        })
+        } )
       );
     }
 
@@ -79,8 +79,8 @@ export const createTask = async (input: {
     //   console.log(taskStore?.tasks, taskStore?.tasks[status]?.totalLength);
 
     const res: any = await database.createDocument(
-      process.env.NEXT_PUBLIC_DATABASE_ID || "",
-      process.env.NEXT_PUBLIC_TASKS_COLLECTION_ID || "",
+      process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID || "",
+      process.env.NEXT_PUBLIC_APPWRITE_TASKS_COLLECTION_ID || "",
       ID.unique(),
       {
         userId: userId,
@@ -91,35 +91,35 @@ export const createTask = async (input: {
         description: description,
         keywords: `${title}`,
         images: imagesUrl,
-        index: (taskStore[status]?.totalLength || 0) + 1,
+        index: ( taskStore[ status ]?.totalLength || 0 ) + 1,
         dueDate: dueDate || null,
       }
     );
 
     // if( taskStore?.tasks && taskStore?.tasks[status]){
-    console.log(dueDate);
+    console.log( dueDate );
 
-    if (taskStore[status]) {
+    if ( taskStore[ status ] ) {
       const updateTaskFunction =
-        (status === "in-progress" && taskStore.setInProgress) ||
-        (status === "todo" && taskStore.setTodo);
+        ( status === "in-progress" && taskStore.setInProgress ) ||
+        ( status === "todo" && taskStore.setTodo );
       status === "completed" && taskStore.setCompleted;
 
-      const updatedTasks: ITaskListInfo = Object.assign(taskStore[status]!, {});
-      updatedTasks.tasks = [res, ...updatedTasks.tasks!];
+      const updatedTasks: ITaskListInfo = Object.assign( taskStore[ status ]!, {} );
+      updatedTasks.tasks = [ res, ...updatedTasks.tasks! ];
 
-      if (updateTaskFunction) updateTaskFunction(updatedTasks);
+      if ( updateTaskFunction ) updateTaskFunction( updatedTasks );
     }
 
-    setIsLoading(false);
+    setIsLoading( false );
     onSuccess();
-  } catch (error: any) {
-    input.setIsLoading(false);
-    toast.error(error?.message || "Something Went Wrong!");
+  } catch ( error: any ) {
+    input.setIsLoading( false );
+    toast.error( error?.message || "Something Went Wrong!" );
   }
 };
 
-export const updateTask = async (input: {
+export const updateTask = async ( input: {
   taskStore: ITaskStore;
   task: ITask;
   userId: string;
@@ -132,7 +132,7 @@ export const updateTask = async (input: {
   images?: File[];
   dueDate?: string;
   setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
-}) => {
+} ) => {
   try {
     const {
       description,
@@ -149,22 +149,22 @@ export const updateTask = async (input: {
       task,
     } = input;
 
-    setIsLoading(true);
+    setIsLoading( true );
 
     const imagesUrl: string[] = task.images;
 
-    if (images) {
+    if ( images ) {
       await Promise.all(
-        images.map(async (file) => {
+        images.map( async ( file ) => {
           const promise = await storage.createFile(
-            process.env.NEXT_PUBLIC_STORAGE_ID || "",
+            process.env.NEXT_PUBLIC_APPWRITE_STORAGE_BUCKET_ID || "",
             ID.unique(),
             file
           );
           imagesUrl.push(
-            `https://cloud.appwrite.io/v1/storage/buckets/${process.env.NEXT_PUBLIC_STORAGE_ID}/files/${promise.$id}/view?project=647dc841ab72fff2362b`
+            `${process.env.NEXT_PUBLIC_APPWRITE_ENDPOINT}/storage/buckets/${process.env.NEXT_PUBLIC_APPWRITE_STORAGE_BUCKET_ID}/files/${promise.$id}/view?project=${process.env.NEXT_PUBLIC_APPWRITE_PROJECT_ID}`
           );
-        })
+        } )
       );
     }
 
@@ -172,8 +172,8 @@ export const updateTask = async (input: {
     //   console.log(taskStore?.tasks, taskStore?.tasks[status]?.totalLength);
 
     const res: any = await database.updateDocument(
-      process.env.NEXT_PUBLIC_DATABASE_ID || "",
-      process.env.NEXT_PUBLIC_TASKS_COLLECTION_ID || "",
+      process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID || "",
+      process.env.NEXT_PUBLIC_APPWRITE_TASKS_COLLECTION_ID || "",
       task.$id,
       {
         userId: userId,
@@ -184,113 +184,113 @@ export const updateTask = async (input: {
         description: description,
         keywords: `${title}`,
         images: imagesUrl,
-        index: (taskStore[status]?.totalLength || 0) + 1,
+        index: ( taskStore[ status ]?.totalLength || 0 ) + 1,
         dueDate: dueDate || null,
       }
     );
 
-    if (task.status !== status) {
+    if ( task.status !== status ) {
       const previousTasksColumn: ITaskListInfo = Object.assign(
-        taskStore[task.status]!,
+        taskStore[ task.status ]!,
         {}
       );
 
       const newTasksColumn: ITaskListInfo = Object.assign(
-        taskStore[status]!,
+        taskStore[ status ]!,
         {}
       );
 
       const previousTaskColumnFunction =
-        (task.status === "in-progress" && taskStore.setInProgress) ||
-        (task.status === "todo" && taskStore.setTodo) ||
-        (task.status === "completed" && taskStore.setCompleted);
+        ( task.status === "in-progress" && taskStore.setInProgress ) ||
+        ( task.status === "todo" && taskStore.setTodo ) ||
+        ( task.status === "completed" && taskStore.setCompleted );
 
       const newTaskColumnFunction =
-        (status === "in-progress" && taskStore.setInProgress) ||
-        (status === "todo" && taskStore.setTodo) ||
-        (status === "completed" && taskStore.setCompleted);
+        ( status === "in-progress" && taskStore.setInProgress ) ||
+        ( status === "todo" && taskStore.setTodo ) ||
+        ( status === "completed" && taskStore.setCompleted );
 
-      const taskIdx = taskStore[task.status]?.tasks?.findIndex(
-        (e) => e.$id === task.$id
+      const taskIdx = taskStore[ task.status ]?.tasks?.findIndex(
+        ( e ) => e.$id === task.$id
       );
 
       previousTasksColumn &&
         taskIdx !== undefined &&
-        previousTasksColumn?.tasks?.splice(taskIdx, 1);
+        previousTasksColumn?.tasks?.splice( taskIdx, 1 );
 
       previousTaskColumnFunction &&
-        previousTaskColumnFunction(previousTasksColumn);
+        previousTaskColumnFunction( previousTasksColumn );
 
-      newTasksColumn.tasks = [res, ...(newTasksColumn.tasks || [])];
+      newTasksColumn.tasks = [ res, ...( newTasksColumn.tasks || [] ) ];
 
-      newTaskColumnFunction && newTaskColumnFunction(newTasksColumn);
+      newTaskColumnFunction && newTaskColumnFunction( newTasksColumn );
 
-      console.log(newTasksColumn, previousTasksColumn, taskIdx);
+      console.log( newTasksColumn, previousTasksColumn, taskIdx );
     }
 
-    if (task.status === status) {
+    if ( task.status === status ) {
       const tasksColumn: ITaskListInfo = Object.assign(
-        taskStore[task.status]!,
+        taskStore[ task.status ]!,
         {}
       );
 
       const taskColumnFunction =
-        (task.status === "in-progress" && taskStore.setInProgress) ||
-        (task.status === "todo" && taskStore.setTodo) ||
-        (task.status === "completed" && taskStore.setCompleted);
+        ( task.status === "in-progress" && taskStore.setInProgress ) ||
+        ( task.status === "todo" && taskStore.setTodo ) ||
+        ( task.status === "completed" && taskStore.setCompleted );
 
       tasksColumn.tasks =
-        tasksColumn.tasks?.map((taskInfo) => {
-          if (taskInfo.$id === task.$id) {
+        tasksColumn.tasks?.map( ( taskInfo ) => {
+          if ( taskInfo.$id === task.$id ) {
             return res;
           }
           return taskInfo;
-        }) || null;
+        } ) || null;
 
-      taskColumnFunction && taskColumnFunction(tasksColumn);
+      taskColumnFunction && taskColumnFunction( tasksColumn );
     }
 
-    setIsLoading(false);
+    setIsLoading( false );
     onSuccess();
-  } catch (error: any) {
-    input.setIsLoading(false);
-    toast.error(error?.message || "Something Went Wrong!");
+  } catch ( error: any ) {
+    input.setIsLoading( false );
+    toast.error( error?.message || "Something Went Wrong!" );
   }
 };
 
-export const hanldeDragDrop = async (input: {
+export const hanldeDragDrop = async ( input: {
   taskStore: ITaskStore;
   result: DropResult;
-}) => {
+} ) => {
   try {
     const { result, taskStore } = input;
 
-    console.log(result);
+    console.log( result );
 
-    if (!result.destination?.droppableId) return;
+    if ( !result.destination?.droppableId ) return;
 
     const sourceTasksColumn = Object.assign(
-      taskStore[result.source.droppableId as ETaskStatuses]!,
+      taskStore[ result.source.droppableId as ETaskStatuses ]!,
       {}
     );
 
     const setSourceTasksFunction =
-      (result.source.droppableId === "in-progress" &&
-        taskStore.setInProgress) ||
-      (result.source.droppableId === "todo" && taskStore.setTodo) ||
-      (result.source.droppableId === "completed" && taskStore.setCompleted);
+      ( result.source.droppableId === "in-progress" &&
+        taskStore.setInProgress ) ||
+      ( result.source.droppableId === "todo" && taskStore.setTodo ) ||
+      ( result.source.droppableId === "completed" && taskStore.setCompleted );
 
     const destinationTasksColumn = Object.assign(
-      taskStore[result.destination.droppableId as ETaskStatuses]!,
+      taskStore[ result.destination.droppableId as ETaskStatuses ]!,
       {}
     );
 
     const setDestinationTasksFunction =
-      (result.destination.droppableId === "in-progress" &&
-        taskStore.setInProgress) ||
-      (result.destination.droppableId === "todo" && taskStore.setTodo) ||
-      (result.destination.droppableId === "completed" &&
-        taskStore.setCompleted);
+      ( result.destination.droppableId === "in-progress" &&
+        taskStore.setInProgress ) ||
+      ( result.destination.droppableId === "todo" && taskStore.setTodo ) ||
+      ( result.destination.droppableId === "completed" &&
+        taskStore.setCompleted );
 
     if (
       result.source.droppableId === result.destination.droppableId &&
@@ -300,7 +300,7 @@ export const hanldeDragDrop = async (input: {
 
     if (
       result.source.droppableId === result.destination.droppableId &&
-      taskStore[result.source.droppableId as ETaskStatuses] &&
+      taskStore[ result.source.droppableId as ETaskStatuses ] &&
       sourceTasksColumn &&
       destinationTasksColumn
     ) {
@@ -310,17 +310,17 @@ export const hanldeDragDrop = async (input: {
       );
 
       // Insert the element at the desired position
-      if (removedElements)
+      if ( removedElements )
         destinationTasksColumn.tasks?.splice(
           result.destination.index,
           0,
-          removedElements[0]
+          removedElements[ 0 ]
         );
-      if (setDestinationTasksFunction)
-        setDestinationTasksFunction(destinationTasksColumn);
+      if ( setDestinationTasksFunction )
+        setDestinationTasksFunction( destinationTasksColumn );
       await database.updateDocument(
-        process.env.NEXT_PUBLIC_DATABASE_ID || "",
-        process.env.NEXT_PUBLIC_TASKS_COLLECTION_ID || "",
+        process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID || "",
+        process.env.NEXT_PUBLIC_APPWRITE_TASKS_COLLECTION_ID || "",
         result.draggableId,
         {
           index: result.destination.index,
@@ -344,19 +344,19 @@ export const hanldeDragDrop = async (input: {
         destinationTasksColumn.totalLength! + 1;
 
       // Insert the element at the desired position
-      if (removedElements)
+      if ( removedElements )
         destinationTasksColumn.tasks?.splice(
           result.destination.index,
           0,
-          removedElements[0]
+          removedElements[ 0 ]
         );
 
-      if (setDestinationTasksFunction)
-        setDestinationTasksFunction(destinationTasksColumn);
+      if ( setDestinationTasksFunction )
+        setDestinationTasksFunction( destinationTasksColumn );
 
       await database.updateDocument(
-        process.env.NEXT_PUBLIC_DATABASE_ID || "",
-        process.env.NEXT_PUBLIC_TASKS_COLLECTION_ID || "",
+        process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID || "",
+        process.env.NEXT_PUBLIC_APPWRITE_TASKS_COLLECTION_ID || "",
         result.draggableId,
         {
           status: result.destination.droppableId,
@@ -364,15 +364,15 @@ export const hanldeDragDrop = async (input: {
         }
       );
     }
-  } catch (error: any) {
+  } catch ( error: any ) {
     // input.setIsLoading(false);
-    toast.error(error?.message || "Something Went Wrong!");
+    toast.error( error?.message || "Something Went Wrong!" );
   }
 };
 
 // TEST
 
-export const getTasks = async (input: {
+export const getTasks = async ( input: {
   taskStore: ITaskStore;
   userId: string;
   realm: string;
@@ -383,36 +383,36 @@ export const getTasks = async (input: {
     keyword?: string;
     date?: string;
   };
-}) => {
+} ) => {
   try {
     const { realm, userId, taskStore, filters, status, setIsLoading } = input;
 
-    setIsLoading(true);
-    const getQueryList = (status: string) => {
+    setIsLoading( true );
+    const getQueryList = ( status: string ) => {
       return [
-        Query.equal("userId", userId),
-        Query.equal("realm", realm),
-        Query.equal("status", status),
-        Query.limit(15),
+        Query.equal( "userId", userId ),
+        Query.equal( "realm", realm ),
+        Query.equal( "status", status ),
+        Query.limit( 15 ),
         // Query.orderAsc("$id"),
-        Query.orderAsc("index"),
-        Query.orderDesc("$updatedAt"),
+        Query.orderAsc( "index" ),
+        Query.orderDesc( "$updatedAt" ),
       ];
     };
 
-    const queries = getQueryList(status);
+    const queries = getQueryList( status );
 
-    if (filters?.priority) {
-      queries.push(Query.equal("priority", filters.priority));
+    if ( filters?.priority ) {
+      queries.push( Query.equal( "priority", filters.priority ) );
     }
 
-    if (filters?.keyword) {
-      queries.push(Query.search("keywords", filters.keyword));
+    if ( filters?.keyword ) {
+      queries.push( Query.search( "keywords", filters.keyword ) );
     }
 
     const res: any = await database.listDocuments(
-      process.env.NEXT_PUBLIC_DATABASE_ID || "",
-      process.env.NEXT_PUBLIC_TASKS_COLLECTION_ID || "",
+      process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID || "",
+      process.env.NEXT_PUBLIC_APPWRITE_TASKS_COLLECTION_ID || "",
       queries
     );
 
@@ -424,19 +424,19 @@ export const getTasks = async (input: {
     };
 
     const setTasksFunction =
-      (status === "in-progress" && taskStore.setInProgress) ||
-      (status === "todo" && taskStore.setTodo) ||
-      (status === "completed" && taskStore.setCompleted);
+      ( status === "in-progress" && taskStore.setInProgress ) ||
+      ( status === "todo" && taskStore.setTodo ) ||
+      ( status === "completed" && taskStore.setCompleted );
 
-    if (setTasksFunction) setTasksFunction(taskList);
-    setIsLoading(false);
-  } catch (error: any) {
-    input.setIsLoading(false);
-    toast.error(error?.message || "Something Went Wrong!");
+    if ( setTasksFunction ) setTasksFunction( taskList );
+    setIsLoading( false );
+  } catch ( error: any ) {
+    input.setIsLoading( false );
+    toast.error( error?.message || "Something Went Wrong!" );
   }
 };
 
-export const getNewPageTasks = async (input: {
+export const getNewPageTasks = async ( input: {
   taskStore: ITaskStore;
   userId: string;
   realm: string;
@@ -448,43 +448,43 @@ export const getNewPageTasks = async (input: {
     keyword?: string;
     date?: string;
   };
-}) => {
+} ) => {
   try {
     const { realm, userId, taskStore, filters, status, setIsLoading, page } =
       input;
 
-    setIsLoading(true);
-    const getQueryList = (status: string) => {
+    setIsLoading( true );
+    const getQueryList = ( status: string ) => {
       return [
-        Query.equal("userId", userId),
-        Query.equal("realm", realm),
-        Query.equal("status", status),
-        Query.limit(6),
+        Query.equal( "userId", userId ),
+        Query.equal( "realm", realm ),
+        Query.equal( "status", status ),
+        Query.limit( 6 ),
         // Query.orderAsc("$id"),
-        Query.orderAsc("index"),
-        Query.orderDesc("$updatedAt"),
-        Query.offset((page - 1) * 15),
+        Query.orderAsc( "index" ),
+        Query.orderDesc( "$updatedAt" ),
+        Query.offset( ( page - 1 ) * 15 ),
       ];
     };
 
-    const queries = getQueryList(status);
+    const queries = getQueryList( status );
 
-    if (filters?.priority) {
-      queries.push(Query.equal("priority", filters.priority));
+    if ( filters?.priority ) {
+      queries.push( Query.equal( "priority", filters.priority ) );
     }
 
-    if (filters?.keyword) {
-      queries.push(Query.search("keywords", filters.keyword));
+    if ( filters?.keyword ) {
+      queries.push( Query.search( "keywords", filters.keyword ) );
     }
 
     const res: any = await database.listDocuments(
-      process.env.NEXT_PUBLIC_DATABASE_ID || "",
-      process.env.NEXT_PUBLIC_TASKS_COLLECTION_ID || "",
+      process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID || "",
+      process.env.NEXT_PUBLIC_APPWRITE_TASKS_COLLECTION_ID || "",
       queries
     );
 
     const updatedTasks = [
-      ...(taskStore[status as ETaskStatuses]?.tasks || []),
+      ...( taskStore[ status as ETaskStatuses ]?.tasks || [] ),
       ...res.documents,
     ];
 
@@ -496,48 +496,48 @@ export const getNewPageTasks = async (input: {
     };
 
     const setTasksFunction =
-      (status === "in-progress" && taskStore.setInProgress) ||
-      (status === "todo" && taskStore.setTodo) ||
-      (status === "completed" && taskStore.setCompleted);
+      ( status === "in-progress" && taskStore.setInProgress ) ||
+      ( status === "todo" && taskStore.setTodo ) ||
+      ( status === "completed" && taskStore.setCompleted );
 
-    if (setTasksFunction) setTasksFunction(taskList);
-    console.log(taskList);
-    setIsLoading(false);
-  } catch (error: any) {
-    input.setIsLoading(false);
-    toast.error(error?.message || "Something Went Wrong!");
+    if ( setTasksFunction ) setTasksFunction( taskList );
+    console.log( taskList );
+    setIsLoading( false );
+  } catch ( error: any ) {
+    input.setIsLoading( false );
+    toast.error( error?.message || "Something Went Wrong!" );
   }
 };
 
-export const deleteTask = async (input: {
+export const deleteTask = async ( input: {
   task: ITask;
   taskStore: ITaskStore;
-}) => {
+} ) => {
   try {
     const { taskStore, task } = input;
 
     const setTasksFunction =
-      (task.status === "in-progress" && taskStore.setInProgress) ||
-      (task.status === "todo" && taskStore.setTodo) ||
-      (task.status === "completed" && taskStore.setCompleted);
+      ( task.status === "in-progress" && taskStore.setInProgress ) ||
+      ( task.status === "todo" && taskStore.setTodo ) ||
+      ( task.status === "completed" && taskStore.setCompleted );
 
     const tasksColumn: ITaskListInfo = Object.assign(
-      taskStore[task.status]!,
+      taskStore[ task.status ]!,
       {}
     );
 
-    const taskIdx = tasksColumn.tasks?.findIndex((e) => e.$id === task.$id);
+    const taskIdx = tasksColumn.tasks?.findIndex( ( e ) => e.$id === task.$id );
 
-    taskIdx !== undefined && tasksColumn.tasks?.splice(taskIdx, 1);
+    taskIdx !== undefined && tasksColumn.tasks?.splice( taskIdx, 1 );
 
-    if (setTasksFunction) setTasksFunction(tasksColumn);
+    if ( setTasksFunction ) setTasksFunction( tasksColumn );
 
     await database.deleteDocument(
-      process.env.NEXT_PUBLIC_DATABASE_ID || "",
-      process.env.NEXT_PUBLIC_TASKS_COLLECTION_ID || "",
+      process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID || "",
+      process.env.NEXT_PUBLIC_APPWRITE_TASKS_COLLECTION_ID || "",
       task.$id
     );
-  } catch (error: any) {
-    toast.error(error?.message || "Something Went Wrong!");
+  } catch ( error: any ) {
+    toast.error( error?.message || "Something Went Wrong!" );
   }
 };

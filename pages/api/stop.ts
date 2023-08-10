@@ -5,8 +5,8 @@
 // const client = new Client();
 
 // client
-//   .setEndpoint("https://cloud.appwrite.io/v1") // Your API Endpoint
-//   .setProject("647dc841ab72fff2362b"); // Your project ID
+//   .setEndpoint(process.env.NEXT_PUBLIC_APPWRITE_ENDPOINT) // Your API Endpoint
+//   .setProject(process.env.NEXT_PUBLIC_APPWRITE_PROJECT_ID); // Your project ID
 
 // const databases = new Databases(client);
 
@@ -32,7 +32,7 @@
 //     );
 
 //     // const resp = await databases.listDocuments(
-//     //   "647e598757fffd819407",
+//     //   process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID,
 //     //   "647f9d0051f0ebff84be"
 //     // );
 //     console.log(resp);

@@ -2,7 +2,7 @@
 const nextConfig = {
   reactStrictMode: false,
   images: {
-    domains: ["cloud.appwrite.io"],
+    domains: ["cloud.appwrite.io", "appwrite.local.terabits.io"],
   },
 };
 

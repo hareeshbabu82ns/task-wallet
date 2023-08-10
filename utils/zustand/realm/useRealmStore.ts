@@ -6,23 +6,23 @@ import { IRealm, IRealmStore } from "./IRealmStore";
 import { Dispatch, SetStateAction } from "react";
 
 const client = new Client();
-const account = new Account(client);
-const database = new Databases(client);
+const account = new Account( client );
+const database = new Databases( client );
 
 client
-  .setEndpoint("https://cloud.appwrite.io/v1") // Your API Endpoint
-  .setProject(process.env.NEXT_PUBLIC_PROJECT_ID || ""); // Your project ID
+  .setEndpoint( process.env.NEXT_PUBLIC_APPWRITE_ENDPOINT ) // Your API Endpoint
+  .setProject( process.env.NEXT_PUBLIC_APPWRITE_PROJECT_ID ); // Your project ID
 
-export const useRealmStore = create<IRealmStore>((set) => ({
+export const useRealmStore = create<IRealmStore>( ( set ) => ( {
   currentRealm: null,
   realms: null,
-  setCurrentRealm: (currentRealm) => {
-    set({ currentRealm });
+  setCurrentRealm: ( currentRealm ) => {
+    set( { currentRealm } );
   },
-  setRealms: (realms) => {
-    set({ realms });
+  setRealms: ( realms ) => {
+    set( { realms } );
   },
-}));
+} ) );
 
 export const createRealm = async (
   name: string,
@@ -33,8 +33,8 @@ export const createRealm = async (
 ) => {
   try {
     const res = await database.createDocument(
-      process.env.NEXT_PUBLIC_DATABASE_ID!,
-      "647e598d8ec64b37fb3a",
+      process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID!,
+      process.env.NEXT_PUBLIC_APPWRITE_REALM_COLLECTION_ID || "",
       ID.unique(),
       {
         name,
@@ -42,23 +42,23 @@ export const createRealm = async (
         userId,
       }
     );
-    toast.success("Realm created successfully");
+    toast.success( "Realm created successfully" );
     const newRealm = {
       name,
       description,
       userId,
       id: res.$id,
     };
-    realmStore.setCurrentRealm(newRealm);
+    realmStore.setCurrentRealm( newRealm );
 
-    console.log(realmStore.currentRealm);
+    console.log( realmStore.currentRealm );
 
-    if (realmStore.realms)
-      realmStore.setRealms([...realmStore.realms, newRealm] || []);
-    else realmStore.setRealms([newRealm]);
-  } catch (error: any) {
-    console.log(error);
-    toast.error(error?.message || "Something Went Wrong!");
+    if ( realmStore.realms )
+      realmStore.setRealms( [ ...realmStore.realms, newRealm ] || [] );
+    else realmStore.setRealms( [ newRealm ] );
+  } catch ( error: any ) {
+    console.log( error );
+    toast.error( error?.message || "Something Went Wrong!" );
   }
 };
 
@@ -68,23 +68,23 @@ export const getRealms = async (
   setIsLoading: Dispatch<SetStateAction<boolean>>
 ) => {
   try {
-    setIsLoading(true);
+    setIsLoading( true );
     const res: any = await database.listDocuments(
-      "647e598757fffd819407",
-      "647e598d8ec64b37fb3a",
-      [Query.limit(100), Query.equal("userId", userId)]
+      process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID || "",
+      process.env.NEXT_PUBLIC_APPWRITE_REALM_COLLECTION_ID || "",
+      [ Query.limit( 100 ), Query.equal( "userId", userId ) ]
     );
 
-    const realms = res.documents.map((e: any) => {
+    const realms = res.documents.map( ( e: any ) => {
       return { name: e.name, description: e.description, userId: e.userId };
-    });
-    toast.success("Realm fetched successfully");
-    realmStore.setRealms(realms);
-    if (realms.length === 0) realmStore.setCurrentRealm(null);
-    setIsLoading(false);
-  } catch (error: any) {
-    console.log(error);
-    setIsLoading(false);
-    toast.error(error?.message || "Something Went Wrong!");
+    } );
+    toast.success( "Realm fetched successfully" );
+    realmStore.setRealms( realms );
+    if ( realms.length === 0 ) realmStore.setCurrentRealm( null );
+    setIsLoading( false );
+  } catch ( error: any ) {
+    console.log( error );
+    setIsLoading( false );
+    toast.error( error?.message || "Something Went Wrong!" );
   }
 };
